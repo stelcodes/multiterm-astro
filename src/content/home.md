@@ -4,4 +4,5 @@ avatarImage:
     alt: "My avatar"
 githubCalendar: "stelcodes"
 ---
-Welcome to the example site. This site is meant to show off my custom Astro theme/template **MultiTerm** which creates a coder-ready blog complete with an interactive theme changer, RSS, sitemap, tagging, and markdown extensions.
+Welcome!<br>
+My name is Hamza. I specialize in Cloud-Native and Kubernetes. I’m also a Free/Open source enthusiast. My favorite topics are DevOps transformation, automation, data, and metrics.

@@ -2,13 +2,13 @@ import type { SiteConfig } from '@types'
 
 const config: SiteConfig = {
   // Absolute URL to the root of your published site, used for generating links and sitemaps.
-  site: 'https://multiterm-astro.stelclementine.com',
+  site: 'https://hamzamasood.dev',
   // The name of your site, used in the title and for SEO.
-  title: 'MultiTerm',
+  title: 'Hamza Masood',
   // The description of your site, used for SEO and RSS feed.
   description: 'A coder-ready Astro blog theme with 59 of your favorite color schemes to choose from',
   // The author of the site, used in the footer, SEO, and RSS feed.
-  author: 'Katy Kookaburra',
+  author: 'Hamza Masood',
   // Keywords for SEO, used in the meta tags.
   tags: ['Astro', 'Terminal', 'Theme', 'MultiTerm', 'stelcodes'],
   // Font imported from @fontsource or elsewhere, used for the entire site.
@@ -28,14 +28,14 @@ const config: SiteConfig = {
     },
     {
       name: 'GitHub',
-      url: 'https://github.com/stelcodes/multiterm-astro',
+      url: 'https://github.com/hamza-m-masood',
       external: true,
     }
   ],
   // The theming configuration for the site.
   themes: {
     // The theming mode. One of "single" | "select" | "light-dark-auto".
-    mode: 'select',
+    mode: 'light-dark-auto',
     // The default theme identifier, used when themeMode is "select" or "light-dark-auto".
     // Make sure this is one of the themes listed in `themes` or "auto" for "light-dark-auto" mode.
     default: 'catppuccin-macchiato',
@@ -112,12 +112,10 @@ const config: SiteConfig = {
   },
   // Social links to display in the footer.
   socialLinks: {
-    github: 'https://github.com/stelcodes/multiterm-astro',
-    mastodon: 'https://github.com/stelcodes/multiterm-astro',
-    email: 'https://github.com/stelcodes/multiterm-astro',
-    linkedin: 'https://github.com/stelcodes/multiterm-astro',
-    bluesky: 'https://github.com/stelcodes/multiterm-astro',
-    twitter: 'https://github.com/stelcodes/multiterm-astro',
+    github: 'https://github.com/hamza-m-masood',
+    linkedin: 'https://www.linkedin.com/in/hamza-m-masood/',
+    bluesky: 'https://bsky.app/profile/hamzamasood.bsky.social',
+    twitter: 'https://x.com/hamzamasoodx',
   },
 }
 
