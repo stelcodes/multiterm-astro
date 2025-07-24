@@ -47,7 +47,7 @@ world := s[7:]
 ```
 Here is the graphical view of the above code:
 
-![image of go string](../images/go-string.png)
+![image of go string](https://github.com/hamza-m-masood/multiterm-astro/blob/main/src/content/images/go-string.png?raw=true)
 
 s is a string descriptor. A descriptor is not a pointer; it describes something and has a pointer within it. The descriptor also includes the length of the string. Also, note that the end of the string does not have a null byte like in other programming languages.
 

@@ -14,7 +14,6 @@ The database is created using mongoDB.\
 The messaging system is created using redis.\
 Finally, you might also need an orchestration system such as Ansible. 
 
-
 ## Without using Docker, you may come across a number of issues:
 
 1. The compatability of the various application components with the underlying OS. For example, certain versions of the services might not be compatible with the operating system. 
