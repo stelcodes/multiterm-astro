@@ -1,9 +1,9 @@
 ---
-title: "OAuth Series Part 1 - The OAuth Client"
+title: "Part 1 - The OAuth Client"
 published: 2025-07-25
 draft: false
 description: "Learning about the OAuth client from the authorization grant type"
-tags: ["OAuth"]
+tags: ["OAuth Series"]
 ---
 
 This is a walk-through of the OAuth flow (authorization code grant type):
