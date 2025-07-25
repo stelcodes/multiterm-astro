@@ -57,6 +57,8 @@ Some clients in the real world forego embedding the client credentials in the UR
 
 That is the entire OAuth flow. You now have access to the protected resource
 
+## Going Further
+
 **2.1** Adding a refresh token is possible in the above flow. The refresh token is mentioned in the OAuth 2.0 protocol. This can be done by sending the same request to the authorization server as in step 1.3
 
 **2.2** Once the client receives the refresh token from the authorization server, it is then possible to request an access token by sending the same call as in step 1.4, but instead, changing the `grant_type`:
