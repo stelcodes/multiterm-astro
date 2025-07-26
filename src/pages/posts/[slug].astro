@@ -6,8 +6,8 @@ import PostPreview from '@components/PostPreview.astro'
 import DividerText from '@components/DividerText.astro'
 import { getCollection, render } from 'astro:content'
 import PostAddendum from '@components/PostAddendum.astro'
-import { getImage } from 'astro:assets'
 import TableOfContents from '@components/TableOfContents.astro'
+import { Image } from 'astro:assets'
 
 export const getStaticPaths = (async () => {
   const posts = await getSortedPosts()
@@ -25,16 +25,16 @@ export const getStaticPaths = (async () => {
 
 const { post, prev, next } = Astro.props
 const postData = post.data
-const { headings } = await render(post)
+const { headings, Content: PostContent } = await render(post)
 const addendum = await getCollection('addendum')
-const addendumEntry = addendum.length > 0 ? addendum[0] : undefined
-const addendumHtml = addendumEntry?.rendered?.html
-const addendumAvatarImage = addendumEntry?.data.avatarImage
-  ? await getImage(addendumEntry?.data.avatarImage)
-  : undefined
-const coverImage = postData.coverImage
-  ? (await getImage(postData.coverImage)).src
-  : undefined
+let AddendumContent
+let addendumAvatarImage
+if (addendum.length > 0) {
+  const addendumEntry = addendum[0]
+  const { Content } = await render(addendumEntry)
+  AddendumContent = Content
+  addendumAvatarImage = addendumEntry.data.avatarImage
+}
 ---
 
 <Layout
@@ -42,13 +42,12 @@ const coverImage = postData.coverImage
   description={postData.description}
   author={postData.author}
   tags={postData.tags}
-  coverImage={coverImage}
 >
   <article class="max-w-full py-7.5" data-pagefind-body>
     {
-      postData.coverImage && coverImage && (
-        <img
-          src={coverImage}
+      postData.coverImage && (
+        <Image
+          src={postData.coverImage.src}
           alt={postData.coverImage.alt}
           class="w-full rounded-xl mb-5"
         />
@@ -79,11 +78,15 @@ const coverImage = postData.coverImage
       )
     }
     {headings.length > 0 && <TableOfContents headings={headings} />}
-    <div class="my-5 prose" set:html={post.rendered?.html} />
+    <div class="my-5 prose">
+      <PostContent />
+    </div>
   </article>
   {
-    addendumHtml && (
-      <PostAddendum textHtml={addendumHtml} avatarImage={addendumAvatarImage} />
+    AddendumContent && (
+      <PostAddendum avatarImage={addendumAvatarImage}>
+        <AddendumContent />
+      </PostAddendum>
     )
   }
   <DividerText text="More Posts" />

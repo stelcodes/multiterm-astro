@@ -15,10 +15,14 @@ const fontPath = path.resolve(
 )
 const fontData = fs.readFileSync(fontPath) // Reads the file as a Buffer
 
-const avatarPath = path.resolve('./src/content/avatar.jpg')
+const avatarPath = path.resolve(siteConfig.socialCardAvatarImage)
 let avatarData: Buffer | undefined
 let avatarBase64: string | undefined
-if (fs.existsSync(avatarPath)) {
+if (
+  fs.existsSync(avatarPath) &&
+  (path.extname(avatarPath).toLowerCase() === '.jpg' ||
+    path.extname(avatarPath).toLowerCase() === '.jpeg')
+) {
   avatarData = fs.readFileSync(avatarPath)
   avatarBase64 = `data:image/jpeg;base64,${avatarData.toString('base64')}`
 }
@@ -51,10 +55,13 @@ const ogOptions: SatoriOptions = {
 const markup = (title: string, pubDate: string | undefined, author: string) =>
   html(`<div tw="flex flex-col max-w-full justify-center h-full bg-[${bg}] text-[${fg}] p-12">
     <div style="border-width: 12px; border-radius: 80px;" tw="flex items-center max-w-full p-8 border-[${accent}]/30">
-      ${avatarBase64 ?
-        `<div tw="flex flex-col justify-center items-center w-1/3 h-100">
+      ${
+        avatarBase64
+          ? `<div tw="flex flex-col justify-center items-center w-1/3 h-100">
             <img src="${avatarBase64}" tw="flex w-full rounded-full border-[${accent}]/30" />
-        </div>` : ''}
+        </div>`
+          : ''
+      }
       <div tw="flex flex-1 flex-col max-w-full justify-center items-center">
         ${pubDate ? `<p tw="text-3xl max-w-full text-[${accent}]">${pubDate}</p>` : ''}
         <h1 tw="text-6xl my-14 text-center leading-snug">${title}</h1>

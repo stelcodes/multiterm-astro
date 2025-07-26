@@ -13,11 +13,10 @@ interface Props {
   title?: string
   description?: string
   tags?: string[]
-  coverImage?: string // Relative path to the cover image
   author?: string
 }
 
-const { title, description, tags, coverImage, author } = Astro.props
+const { title, description, tags, author } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href.replace(/\/$/, '') // Remove trailing slash for consistency
 const pageType = Astro.url.pathname.startsWith('/posts') ? 'article' : 'website'
 const pageTitle = title ? `${title} - ${siteConfig.title}` : siteConfig.title

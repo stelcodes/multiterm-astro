@@ -1,34 +1,40 @@
 ---
 import Layout from '@layouts/Layout.astro'
 import { getSortedPosts, url } from '@utils'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import PostPreview from '@components/PostPreview.astro'
 import Pagination from '@components/Pagination.astro'
 import BlockHeader from '@components/BlockHeader.astro'
 import HomeBanner from '@components/HomeBanner.astro'
 import siteConfig from '../site.config'
-import { getImage } from 'astro:assets'
+import TagsSection from '@components/TagsSection.astro'
 
-const homeContent = await getCollection('home')
-const homeEntry = homeContent.length > 0 ? homeContent[0] : undefined
-const avatarImage = homeEntry?.data.avatarImage
-  ? await getImage(homeEntry?.data.avatarImage)
-  : undefined
-const posts = (await getSortedPosts()).slice(0, siteConfig.pageSize)
+const home = await getCollection('home')
+let HomeContent
+let homeAvatarImage
+let homeGithubCalendar
+if (home.length > 0) {
+  const homeEntry = home[0]
+  const { Content } = await render(homeEntry)
+  HomeContent = Content
+  homeAvatarImage = homeEntry.data.avatarImage
+  homeGithubCalendar = homeEntry.data.githubCalendar
+}
+const sortedPosts = await getSortedPosts()
 ---
 
 <Layout>
   {
-    homeEntry && (
-      <HomeBanner
-        textHtml={homeEntry.rendered?.html}
-        avatarImage={avatarImage}
-        githubCalendar={homeEntry.data.githubCalendar}
-      />
+    HomeContent && (
+      <HomeBanner avatarImage={homeAvatarImage} githubCalendar={homeGithubCalendar}>
+        <HomeContent />
+      </HomeBanner>
     )
   }
+  <BlockHeader>Tags</BlockHeader>
+  <TagsSection posts={sortedPosts}/>
   <BlockHeader>Latest Posts</BlockHeader>
-  {posts.map((post) => <PostPreview post={post} />)}
+  {sortedPosts.slice(0, siteConfig.pageSize).map((post) => <PostPreview post={post} />)}
   <Pagination nextLink={url('posts')} nextText="Archive" />
 </Layout>
 

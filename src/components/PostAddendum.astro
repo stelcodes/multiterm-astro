@@ -1,11 +1,11 @@
 ---
-import type { GetImageResult } from 'astro'
+import type { FrontmatterImage } from '@types'
+import { Image } from 'astro:assets'
 
 interface Props {
-  textHtml?: string
-  avatarImage?: GetImageResult
+  avatarImage?: FrontmatterImage
 }
-const { textHtml, avatarImage } = Astro.props
+const { avatarImage } = Astro.props
 ---
 
 <div
@@ -13,15 +13,16 @@ const { textHtml, avatarImage } = Astro.props
 >
   {
     avatarImage && (
-      <img
+      <Image
         src={avatarImage.src}
-        alt={avatarImage.attributes.alt}
-        loading="lazy"
+        alt={avatarImage.alt}
         class="rounded-full size-40 border-8 border-accent/15"
       />
     )
   }
   <div>
-    <div class:list={['m-4 max-w-full prose']} set:html={textHtml} />
+    <div class:list={['m-4 max-w-full prose']}>
+      <slot />
+    </div>
   </div>
 </div>

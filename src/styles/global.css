@@ -27,6 +27,7 @@
   --default-font-family: var(--theme-font);
 }
 
+
 header {
   view-transition-name: none;
 }
@@ -37,6 +38,11 @@ header {
 
 body {
   @apply transition-colors;
+}
+
+/* hide katex-html */
+.katex-html {
+  @apply hidden;
 }
 
 input:focus-visible,
@@ -67,7 +73,7 @@ button {
 article img {
   @apply block max-w-full border-8 border-foreground/10 rounded-xl overflow-hidden mx-auto;
 
-  &[src$='#pixelated'] {
+  &[pixelated='true'] {
     image-rendering: pixelated;
   }
 }
@@ -109,7 +115,7 @@ article img {
           font-size: var(--ec-codeFontSize);
           border-radius: 10px 10px 0 0 !important;
           border-bottom-width: 0 !important;
-          padding: unset !important;
+          padding: 0 12px !important;
 
           &::after,
           &::before {
@@ -127,6 +133,10 @@ article img {
     }
   }
 
+  blockquote div.expressive-code {
+    @apply my-3;
+  }
+
   h1,
   h2,
   h3,
@@ -134,6 +144,10 @@ article img {
   h5,
   h6 {
     @apply flex items-center my-6.5 font-semibold;
+
+    span[role='img'] {
+      @apply mx-2.5;
+    }
 
     .heading-anchor {
       @apply opacity-0 inline-block text-accent/10 ml-3 transition-opacity;

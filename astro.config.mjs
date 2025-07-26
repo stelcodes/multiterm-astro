@@ -15,7 +15,12 @@ import rehypeExternalLinks from "rehype-external-links";
 import remarkDirective from "remark-directive"; /* Handle ::: directives as nodes */
 import rehypeUnwrapImages from "rehype-unwrap-images";
 import { remarkAdmonitions } from "./src/plugins/remark-admonitions"; /* Add admonitions */
+import remarkMath from "remark-math" /* for latex math support */
+import rehypeKatex from "rehype-katex" /* again, for latex math support */
+import remarkGemoji from "./src/plugins/remark-gemoji" /* for shortcode emoji support */
+import rehypePixelated from "./src/plugins/rehype-pixelated"; /* Custom plugin to handle pixelated images */  
 import react from '@astrojs/react';
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -27,7 +32,9 @@ export default defineConfig({
       [remarkDescription, { maxChars: 200 }],
       remarkReadingTime,
       remarkDirective,
-      remarkAdmonitions
+      remarkAdmonitions,
+      remarkMath,
+      remarkGemoji,
     ],
     rehypePlugins: [
       rehypeSlug,
@@ -55,6 +62,8 @@ export default defineConfig({
 				},
 			],
       rehypeUnwrapImages,
+      rehypePixelated,
+      rehypeKatex,
     ],
   },
   vite: {

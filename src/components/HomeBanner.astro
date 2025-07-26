@@ -1,13 +1,13 @@
 ---
+import { Image } from 'astro:assets'
 import ReactGithubCalendar from './ReactGithubCalendar'
-import type { GetImageResult } from 'astro'
+import type { FrontmatterImage } from '../types'
 
 interface Props {
-  textHtml?: string
-  avatarImage?: GetImageResult
+  avatarImage?: FrontmatterImage
   githubCalendar?: string
 }
-const { textHtml, avatarImage, githubCalendar } = Astro.props
+const { avatarImage, githubCalendar } = Astro.props
 ---
 
 <div class="my-6">
@@ -16,15 +16,17 @@ const { textHtml, avatarImage, githubCalendar } = Astro.props
   >
     {
       avatarImage && (
-        <img
+        <Image
           src={avatarImage.src}
-          alt={avatarImage.attributes.alt}
+          alt={avatarImage.alt}
           class="rounded-full border-8 border-accent/15 size-40 aspect-square"
         />
       )
     }
     <div>
-      <div class:list={['m-4 max-w-full prose']} set:html={textHtml} />
+      <div class:list={['m-4 max-w-full prose']}>
+        <slot />
+      </div>
     </div>
   </div>
   {

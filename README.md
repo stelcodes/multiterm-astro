@@ -2,7 +2,9 @@
 
 **MultiTerm** is an Astro blog theme designed for coders who love their color schemes. Easily theme your whole website with your favorite color schemes and have your prose rendered with a nod to the aesthetics of raw markdown.
 
-![Example website screenshot](https://i.imgur.com/cnipzzi.png)
+Check out the live example site [here](https://multiterm.stelclementine.com)!
+
+![Example website screenshot](https://i.imgur.com/zZnrtj3.png)
 ![Example website screenshot](https://i.imgur.com/NPnMB8S.png)
 ![Example website screenshot](https://i.imgur.com/snuQqoY.png)
 ![Example website screenshot](https://i.imgur.com/fWU561J.png)
@@ -17,10 +19,10 @@
 - **Dark/Light/Auto Theme Mode**: Choose any two Shiki themes and use the standard light/dark/auto model for automatically adapting to your reader's theme preferences with button in the site header.
 - **Multiple Theme Mode**: Choose three (or all 59!) Shiki themes and allow your reader to choose their favorite from a dialog menu opened from a button in the header. Every element seamlessly changes color interactively using the magic of CSS variables.
 - **GitHub Activity Widget**: Optionally include a GitHub activity React component on the homepage that (of course) matches the active color scheme perfectly.
-- **Markdown Extensions**: Admonitions, table of contents, MDX, and auto-generated reading time estimates.
+- **Markdown Extensions**: Admonitions, table of contents, emoji shortcodes, KaTeX math, MDX, and auto-generated reading time estimates. See the example site's [Showing Off Blog Features](https://multiterm.stelclementine.com/posts/showing-off-blog-features) post.
 - **RSS Feed and Sitemap**: Built-in support for RSS feeds and sitemap with no extra configuration.
 - **Social Links**: Easily include links to common developer platforms including GitHub, Mastodon, Twitter, LinkedIn and E-mail.
-- **Responsive Design**: Optimized for all devices, from desktops to mobile phones.
+- **Responsive Design**: Optimized for all devices from desktops to mobile phones. Built with [Tailwind v4](https://tailwindcss.com/).
 - **SEO Optimized**: Boost your site's visibility with built-in SEO best practices and automatically generated social card images for every page via [Satori](https://github.com/vercel/satori).
 - **Customizable Build**: Powered by [Astro](https://astro.build/), render as a static site (the default) or generate content dynamically.
 
@@ -30,7 +32,7 @@ Check out the example site [PageSpeed scores](https://pagespeed.web.dev/analysis
 
 **Clone the Repository**:
 ```bash
-git clone --depth 1 https://github.com/stelcodes/multiterm-astro.git my-new-blog && cd my-new-blog
+git clone --depth 1 https://github.com/stelcodes/multiterm-astro my-new-blog && cd my-new-blog
 ```
 
 **Install Dependencies**:

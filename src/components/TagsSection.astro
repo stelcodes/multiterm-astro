@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+  posts: CollectionEntry<'posts'>[]
+}
+
+const { posts } = Astro.props
+const tags = new Set<string>([...posts.flatMap((post) => post.data.tags || [])])
+
+const tagsWithCount = Array.from(tags)
+  .map((tag) => {
+    const count = posts.filter((post) => post.data.tags?.includes(tag)).length
+    return { tag, count }
+  })
+  .sort((a, b) => b.count - a.count)
+---
+
+<ul class="flex flex-wrap gap-x-3 gap-y-4 my-5">
+  {
+    tagsWithCount.map(({ tag, count }) => (
+      <li>
+        <a
+          href={`/tags/${tag}`}
+          class="flex gap-2.5 py-2 pl-4 pr-3 bg-accent/7 rounded-3xl"
+        >
+          {tag}
+          <span class="rounded-full bg-foreground/7 text-primary px-2 py-1 text-xs font-semibold">
+            {count}
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
