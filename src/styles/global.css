@@ -27,7 +27,6 @@
   --default-font-family: var(--theme-font);
 }
 
-
 header {
   view-transition-name: none;
 }
@@ -133,8 +132,11 @@ article img {
     }
   }
 
-  blockquote div.expressive-code {
-    @apply my-3;
+  blockquote,
+  aside {
+    div.expressive-code {
+      @apply my-3;
+    }
   }
 
   h1,
