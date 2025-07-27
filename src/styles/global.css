@@ -24,7 +24,7 @@
   --color-yellow: var(--theme-yellow);
   --color-magenta: var(--theme-magenta);
   --color-cyan: var(--theme-cyan);
-  --default-font-family: var(--theme-font);
+  --default-font-family: var(--theme-font), monospace;
 }
 
 header {
@@ -37,6 +37,8 @@ header {
 
 body {
   @apply transition-colors;
+  font-display: block;
+  font-size-adjust: ex-height 0.53;
 }
 
 /* hide katex-html */
