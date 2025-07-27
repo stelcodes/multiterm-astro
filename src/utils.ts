@@ -116,9 +116,3 @@ export async function getSortedPosts() {
   })
   return sortedPosts
 }
-
-export function url(...paths: string[]) {
-  const base = import.meta.env.BASE_URL
-  const url = `${base}/${paths.join('/')}`.replace(/\/+/g, '/').replace(/\/$/, '')
-  return url === '' ? '/' : url
-}

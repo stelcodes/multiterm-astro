@@ -21,7 +21,7 @@ const tagsWithCount = Array.from(tags)
     tagsWithCount.map(({ tag, count }) => (
       <li>
         <a
-          href={`/tags/${tag}`}
+          href={`/tags/${encodeURIComponent(tag)}`}
           class="flex gap-2.5 py-2 pl-4 pr-3 bg-accent/7 rounded-3xl"
         >
           {tag}

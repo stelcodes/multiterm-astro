@@ -70,7 +70,7 @@ if (addendum.length > 0) {
       postData.tags && (
         <div class="text-accent mb-5">
           {postData.tags.map((tag) => (
-            <a class="underline mr-4 inline-block" href={`/tags/${tag}`}>
+            <a class="underline mr-4 inline-block" href={`/tags/${encodeURIComponent(tag)}`}>
               #{tag}
             </a>
           ))}
