@@ -1,63 +1,48 @@
-import {
-  ExpressiveCodeTheme,
-  loadShikiTheme,
-  type BundledShikiTheme,
-} from 'astro-expressive-code'
+import { type BundledShikiTheme } from 'astro-expressive-code'
 import siteConfig from '../../site.config'
 import type { APIContext } from 'astro'
-import { flattenThemeColors } from '@utils'
+import { resolveThemeColorStyles } from '@utils'
 import Color from 'color'
+import type { ColorStyles, ThemeKey } from '@types'
 
 interface Props {
   theme: BundledShikiTheme
+  colorStyles: ColorStyles
 }
 
-const createCss = (exTheme: ExpressiveCodeTheme) => {
-  const t = flattenThemeColors(exTheme)
-  // console.log(t)
-  const foreground = exTheme.fg
-  const background = exTheme.bg
-  const fromTheme = (key: string) => {
-    let result = t[key]
-    if (!result) {
-      console.warn(`Theme ${exTheme.name} does not have color for ${key}`)
-      result = foreground
-    }
-    return result
-  }
+const createCss = (styles: ColorStyles) => {
   const muted = (color: string, amount: number) => {
     const x = Color(color)
     return x.alpha(amount / 100).rgb()
   }
-  const a = fromTheme('markup.link')
-  const accent = fromTheme('markup.heading')
-  const comment = fromTheme('comment')
-  const constant = fromTheme('constant.numeric')
-  const entity = fromTheme('entity.name.function')
+  const foreground = styles.foreground
+  const background = styles.background
+  const a = styles.a
+  const accent = styles.accent
+  const comment = styles.comment
+  const constant = styles.foreground
+  const entity = styles.entity
   const storageModifierImport = foreground
-  const entityTag = fromTheme('entity.name.tag')
-  const keyword = fromTheme('keyword')
-  const string = fromTheme('string')
-  const variable = fromTheme('variable')
-  const brackethighlighterUnmatched = fromTheme('comment')
-  const invalidIllegalText = fromTheme('errorForeground')
-  // const invalidIllegalBg = fromTheme('war')
-  const carriageReturnText = fromTheme('comment')
-  const regexp = fromTheme('string.regexp')
+  const entityTag = styles.entityTag
+  const keyword = styles.keyword
+  const string = styles.string
+  const variable = styles.variable
+  const brackethighlighterUnmatched = styles.comment
+  const invalidIllegalText = styles.red
+  const carriageReturnText = styles.comment
+  const regexp = styles.regexp
   const markupList = foreground
-  const markupHeading = fromTheme('markup.heading')
-  const markupItalic = fromTheme('markup.italic')
-  const markupBold = fromTheme('markup.bold')
-  const markupDeletedText = fromTheme('markup.deleted')
-  const markupInsertedText = fromTheme('markup.inserted')
+  const markupHeading = styles.foreground
+  const markupItalic = styles.italic
+  const markupBold = styles.foreground
   const changedText = foreground
-  const ignoredText = fromTheme('comment')
-  const red = fromTheme('terminal.ansiRed')
-  const green = fromTheme('terminal.ansiGreen')
-  const blue = fromTheme('terminal.ansiBlue')
-  const yellow = fromTheme('terminal.ansiYellow')
-  const magenta = fromTheme('terminal.ansiMagenta')
-  const cyan = fromTheme('terminal.ansiCyan')
+  const ignoredText = styles.comment
+  const red = styles.red
+  const green = styles.green
+  const blue = styles.blue
+  const yellow = styles.yellow
+  // const magenta = styles.magenta
+  // const cyan = styles.cyan
 
   const altBackground = muted(foreground, 5).mix(Color(background), 0.5).hex()
   return `
@@ -84,8 +69,8 @@ main {
   --color-prettylights-syntax-markup-heading: ${markupHeading};
   --color-prettylights-syntax-markup-italic: ${markupItalic};
   --color-prettylights-syntax-markup-bold: ${markupBold};
-  --color-prettylights-syntax-markup-deleted-text: ${markupDeletedText};
-  --color-prettylights-syntax-markup-inserted-text: ${markupInsertedText};
+  --color-prettylights-syntax-markup-deleted-text: ${red};
+  --color-prettylights-syntax-markup-inserted-text: ${green};
   --color-prettylights-syntax-markup-changed-text: ${changedText};
   --color-prettylights-syntax-markup-ignored-text: ${ignoredText};
   --color-btn-text: ${foreground};
@@ -93,11 +78,11 @@ main {
   --color-btn-border: ${altBackground};
   --color-btn-shadow: 0 0 transparent;
   --color-btn-inset-shadow: 0 0 transparent;
-  --color-btn-hover-bg: #444c56;
-  --color-btn-hover-border: #768390;
-  --color-btn-active-bg: hsl(213deg 12% 27% / 100%);
-  --color-btn-active-border: #636e7b;
-  --color-btn-selected-bg: #2d333b;
+  --color-btn-hover-bg: ${muted(accent, 70)};
+  --color-btn-hover-border: transparent;
+  --color-btn-active-bg: ${muted(accent, 70)};
+  --color-btn-active-border: transparent;
+  --color-btn-selected-bg: ${muted(accent, 70)};
   --color-btn-primary-text: ${background};
   --color-btn-primary-bg: ${muted(accent, 80)};
   --color-btn-primary-border: transparent;
@@ -110,13 +95,13 @@ main {
   --color-btn-primary-disabled-text: ${background};
   --color-btn-primary-disabled-bg: ${muted(accent, 60)};
   --color-btn-primary-disabled-border: transparent;
-  --color-action-list-item-default-hover-bg: rgb(144 157 171 / 12%);
+  --color-action-list-item-default-hover-bg: ${muted(foreground, 4)};
   --color-segmented-control-bg: ${altBackground};
   --color-segmented-control-button-bg: transparent;
   --color-segmented-control-button-selected-border: ${muted(accent, 70)};
   --color-fg-default: ${foreground};
-  --color-fg-muted: ${muted(foreground, 70)};
-  --color-fg-subtle: #545d68;
+  --color-fg-muted: ${muted(foreground, 80)};
+  --color-fg-subtle: ${muted(foreground, 70)};
   --color-canvas-default: ${background};
   --color-canvas-overlay: ${altBackground};
   --color-canvas-inset: ${altBackground};
@@ -124,20 +109,20 @@ main {
   --color-border-default: ${muted(foreground, 20)};
   --color-border-muted: ${muted(foreground, 10)};
   --color-neutral-muted: ${altBackground};
-  --color-accent-fg: ${muted(accent, 70)};
+  --color-accent-fg: ${a};
   --color-accent-emphasis: ${muted(accent, 70)};
   --color-accent-muted: var(--color-border-default);
   --color-accent-subtle: ${altBackground};
   --color-success-fg: ${green};
   --color-attention-fg: ${yellow};
-  --color-attention-muted: rgb(174 124 20 / 40%);
-  --color-attention-subtle: rgb(174 124 20 / 15%);
+  --color-attention-muted: ${muted(yellow, 80)};
+  --color-attention-subtle: ${muted(yellow, 70)};
   --color-danger-fg: ${red};
-  --color-danger-muted: rgb(229 83 75 / 40%);
-  --color-danger-subtle: rgb(229 83 75 / 10%);
+  --color-danger-muted: ${muted(red, 80)};
+  --color-danger-subtle: ${muted(red, 70)};
   --color-primer-shadow-inset: 0 0 transparent;
-  --color-scale-gray-7: #373e47;
-  --color-scale-blue-8: #143d79;
+  --color-scale-gray-7: ${muted(foreground, 50)};
+  --color-scale-blue-8: ${blue};
 
   /*! Extensions from @primer/css/alerts/flash.scss */
   --color-social-reaction-bg-hover: var(--color-scale-gray-7);
@@ -149,6 +134,11 @@ main .pagination-loader-container {
 }
 
 /*! Custom CSS */
+
+textarea::placeholder,
+input::placeholder {
+  color: ${muted(foreground, 80)} !important;
+}
 
 .gsc-reactions-count {
   display: none;
@@ -193,7 +183,7 @@ div.gsc-comment-content code {
 }
 
 .gsc-homepage-bg {
-  background-color: #15202b;
+  background-color: ${background};
 }
 
 main .gsc-loading-image {
@@ -203,9 +193,8 @@ main .gsc-loading-image {
 }
 
 export async function GET(context: APIContext) {
-  const { theme } = context.props as Props
-  const shikiTheme = await loadShikiTheme(theme as BundledShikiTheme)
-  const css = createCss(shikiTheme)
+  const { colorStyles } = context.props as Props
+  const css = createCss(colorStyles)
   return new Response(css, {
     headers: {
       'Access-Control-Allow-Origin': 'https://giscus.app',
@@ -217,10 +206,11 @@ export async function GET(context: APIContext) {
 }
 
 export async function getStaticPaths() {
+  const resolvedColorStyles = await resolveThemeColorStyles(siteConfig.themes.include)
   return siteConfig.themes.include.map((theme) => {
     return {
       params: { theme },
-      props: { theme },
+      props: { colorStyles: resolvedColorStyles[theme] },
     }
   })
 }
