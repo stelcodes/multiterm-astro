@@ -32,7 +32,7 @@ const sortedPosts = await getSortedPosts()
     )
   }
   <BlockHeader>Tags</BlockHeader>
-  <TagsSection posts={sortedPosts}/>
+  <TagsSection posts={sortedPosts} />
   <BlockHeader>Latest Posts</BlockHeader>
   {sortedPosts.slice(0, siteConfig.pageSize).map((post) => <PostPreview post={post} />)}
   <Pagination nextLink="/posts" nextText="Archive" />

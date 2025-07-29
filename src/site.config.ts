@@ -6,7 +6,8 @@ const config: SiteConfig = {
   // The name of your site, used in the title and for SEO.
   title: 'Hamza Masood',
   // The description of your site, used for SEO and RSS feed.
-  description: 'A coder-ready Astro blog theme with 59 of your favorite color schemes to choose from',
+  description:
+    'A coder-ready Astro blog theme with 59 of your favorite color schemes to choose from',
   // The author of the site, used in the footer, SEO, and RSS feed.
   author: 'Hamza Masood',
   // Keywords for SEO, used in the meta tags.
@@ -34,7 +35,7 @@ const config: SiteConfig = {
       name: 'GitHub',
       url: 'https://github.com/hamza-m-masood',
       external: true,
-    }
+    },
   ],
   // The theming configuration for the site.
   themes: {

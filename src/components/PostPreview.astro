@@ -41,7 +41,10 @@ const description = remarkPluginFrontmatter.description || post.data.description
     post.data.tags && (
       <div class="text-accent mb-6">
         {post.data.tags.map((tag) => (
-          <a class="underline mr-4 inline-block" href={`/tags/${encodeURIComponent(tag)}`}>
+          <a
+            class="underline mr-4 inline-block"
+            href={`/tags/${encodeURIComponent(tag)}`}
+          >
             #{tag}
           </a>
         ))}
