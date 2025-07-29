@@ -8,6 +8,7 @@ import { getCollection, render } from 'astro:content'
 import PostAddendum from '@components/PostAddendum.astro'
 import TableOfContents from '@components/TableOfContents.astro'
 import { Image } from 'astro:assets'
+import GiscusLoader from '@components/GiscusLoader.astro'
 
 export const getStaticPaths = (async () => {
   const posts = await getSortedPosts()
@@ -70,7 +71,10 @@ if (addendum.length > 0) {
       postData.tags && (
         <div class="text-accent mb-5">
           {postData.tags.map((tag) => (
-            <a class="underline mr-4 inline-block" href={`/tags/${encodeURIComponent(tag)}`}>
+            <a
+              class="underline mr-4 inline-block"
+              href={`/tags/${encodeURIComponent(tag)}`}
+            >
               #{tag}
             </a>
           ))}
@@ -92,4 +96,7 @@ if (addendum.length > 0) {
   <DividerText text="More Posts" />
   {prev && <PostPreview post={prev} />}
   {next && <PostPreview post={next} />}
+  <DividerText text="Comments" />
+  <div class="giscus"></div>
+  <GiscusLoader />
 </Layout>

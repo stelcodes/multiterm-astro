@@ -1,0 +1,69 @@
+<script>
+  function loadGiscus() {
+    const theme = document.documentElement.getAttribute('data-theme')
+    const script = document.createElement('script')
+    script.src = 'https://giscus.app/client.js'
+    script.setAttribute('data-repo', 'stelcodes/multiterm-astro')
+    script.setAttribute('data-repo-id', 'R_kgDOPNnBig')
+    script.setAttribute('data-category', 'Giscus')
+    script.setAttribute('data-category-id', 'DIC_kwDOPNnBis4CteOc')
+    script.setAttribute('data-mapping', 'pathname')
+    script.setAttribute('data-strict', '0')
+    script.setAttribute('data-reactions-enabled', '0')
+    script.setAttribute('data-emit-metadata', '0')
+    script.setAttribute('data-input-position', 'bottom')
+    script.setAttribute('data-theme', `${Astro.url.origin}/giscus/${theme}.css`)
+    script.setAttribute('data-lang', 'en')
+    script.setAttribute('loading', 'lazy')
+    script.crossOrigin = 'anonymous'
+    script.async = true
+    document.body.appendChild(script)
+  }
+  async function updateTheme(theme: string) {
+    console.log('Updating Giscus theme to:', theme)
+    let giscusFrame
+    // Try to find the Giscus iframe 3 times, in case it takes a moment to load
+    for (let i = 0; i < 3; i++) {
+      giscusFrame = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame')
+      if (giscusFrame) break
+      console.log('Giscus iframe not found, retrying...')
+      // Wait a moment before trying again
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+    }
+    // If the iframe is still not found, log an error and return
+    if (!giscusFrame) {
+      console.error('Giscus iframe not found after retries')
+      return
+    }
+    giscusFrame.contentWindow?.postMessage(
+      { giscus: { setConfig: { theme: `${Astro.url.origin}/giscus/${theme}.css` } } },
+      'https://giscus.app',
+    )
+  }
+  function listenForThemeChange() {
+    // Listen for changes to the data-theme attribute of the html element
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(async (mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+          const newTheme = document.documentElement.getAttribute('data-theme')
+          if (newTheme) {
+            await updateTheme(newTheme)
+          }
+        }
+      })
+    })
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
+  }
+  // Load Giscus script with correct theme and listen for theme changes
+  loadGiscus()
+  listenForThemeChange()
+</script>
+
+<style is:global>
+  iframe.giscus-frame {
+    margin-block: 32px;
+  }
+</style>
