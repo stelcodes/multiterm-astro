@@ -49,7 +49,8 @@ const reactionsEnabled = giscusConfig.reactionsEnabled ? '1' : '0'
     script.setAttribute('data-strict', '0')
     script.setAttribute('data-reactions-enabled', reactionsEnabled)
     script.setAttribute('data-emit-metadata', '0')
-    script.setAttribute('data-input-position', 'bottom')
+    // Setting this to 'bottom' doesn't work. Not sure why.
+    script.setAttribute('data-input-position', 'top')
     script.setAttribute('data-theme', `${origin}/giscus/${theme}.css`)
     script.setAttribute('data-lang', 'en')
     script.setAttribute('loading', 'lazy')
