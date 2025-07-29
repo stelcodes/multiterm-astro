@@ -93,10 +93,9 @@ if (addendum.length > 0) {
       </PostAddendum>
     )
   }
-  <DividerText text="More Posts" />
+  {(prev || next) && <DividerText text="More Posts" />}
   {prev && <PostPreview post={prev} />}
   {next && <PostPreview post={next} />}
   <DividerText text="Comments" />
-  <div class="giscus"></div>
   <GiscusLoader />
 </Layout>
