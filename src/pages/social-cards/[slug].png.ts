@@ -3,11 +3,10 @@ import { Resvg } from '@resvg/resvg-js'
 import type { APIContext, InferGetStaticPropsType } from 'astro'
 import satori, { type SatoriOptions } from 'satori'
 import { html } from 'satori-html'
-import { dateString, getSortedPosts, resolveElementStyles } from '@utils'
+import { dateString, getSortedPosts, resolveThemeColorStyles } from '@utils'
 import path from 'path'
 import fs from 'fs'
 import type { ReactNode } from 'react'
-import { loadShikiTheme } from 'astro-expressive-code'
 
 // Load the font file as binary data
 const fontPath = path.resolve(
@@ -27,16 +26,19 @@ if (
   avatarBase64 = `data:image/jpeg;base64,${avatarData.toString('base64')}`
 }
 
-const defaultShikiTheme = await loadShikiTheme(
+const defaultTheme =
   siteConfig.themes.default === 'auto'
     ? siteConfig.themes.include[0]
-    : siteConfig.themes.default,
-)
+    : siteConfig.themes.default
 
-const themeStyles = resolveElementStyles(defaultShikiTheme, {})
-const bg = themeStyles.background
-const fg = themeStyles.foreground
-const accent = themeStyles.accent
+const themeStyles = await resolveThemeColorStyles([defaultTheme])
+const bg = themeStyles[defaultTheme]?.background
+const fg = themeStyles[defaultTheme]?.foreground
+const accent = themeStyles[defaultTheme]?.accent
+
+if (!bg || !fg || !accent) {
+  throw new Error(`Theme ${defaultTheme} does not have required colors`)
+}
 
 const ogOptions: SatoriOptions = {
   // debug: true,

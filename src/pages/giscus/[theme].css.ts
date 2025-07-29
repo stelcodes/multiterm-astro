@@ -7,7 +7,6 @@ import siteConfig from '../../site.config'
 import type { APIContext } from 'astro'
 import { flattenThemeColors } from '@utils'
 import Color from 'color'
-import type { CommonThemeKey } from '@types'
 
 interface Props {
   theme: BundledShikiTheme
@@ -18,7 +17,7 @@ const createCss = (exTheme: ExpressiveCodeTheme) => {
   // console.log(t)
   const foreground = exTheme.fg
   const background = exTheme.bg
-  const fromTheme = (key: CommonThemeKey) => {
+  const fromTheme = (key: string) => {
     let result = t[key]
     if (!result) {
       console.warn(`Theme ${exTheme.name} does not have color for ${key}`)

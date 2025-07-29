@@ -4,9 +4,8 @@ import Header from '@components/Header.astro'
 import Footer from '@components/Footer.astro'
 import LightDarkAutoThemeLoader from '@components/LightDarkAutoThemeLoader.astro'
 import SelectThemeLoader from '@components/SelectThemeLoader.astro'
-import { loadShikiTheme } from 'astro-expressive-code'
 import siteConfig from '../site.config'
-import { resolveElementStyles } from '@utils'
+import { resolveThemeColorStyles } from '@utils'
 import crypto from 'crypto'
 
 interface Props {
@@ -68,14 +67,7 @@ const themeHash = crypto
   .digest('hex')
   .slice(0, 8) // Truncate to the first 8 characters
 
-let resolvedThemes: { [key: string]: { [key: string]: string } } = {}
-for (const theme of siteConfig.themes.include) {
-  const loadedTheme = await loadShikiTheme(theme)
-  resolvedThemes[theme] = resolveElementStyles(
-    loadedTheme,
-    {}, // Pass an empty object to use default styles
-  )
-}
+const resolvedThemes = await resolveThemeColorStyles(siteConfig.themes.include)
 
 let cssLines: string[] = []
 for (const [themeId, themeStyles] of Object.entries(resolvedThemes)) {
