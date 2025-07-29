@@ -1,28 +1,56 @@
 ---
+import siteConfig from '../site.config'
 // This will be localhost during development, site URL in prod
-const siteUrl = Astro.url.origin
+const origin = Astro.url.origin
+const giscusConfig = siteConfig.giscus
+if (!giscusConfig) {
+  throw new Error('Giscus configuration is missing in site.config.ts')
+}
+const repo = giscusConfig.repo
+const repoId = giscusConfig.repoId
+const category = giscusConfig.category
+const categoryId = giscusConfig.categoryId
+const reactionsEnabled = giscusConfig.reactionsEnabled ? '1' : '0'
 ---
 
-<div class="giscus" data-site={siteUrl}></div>
+<div
+  class="giscus"
+  data-origin={origin}
+  data-repo={repo}
+  data-repo-id={repoId}
+  data-category={category}
+  data-category-id={categoryId}
+  data-reactions-enabled={reactionsEnabled}
+>
+</div>
 <script>
-  const siteUrl = document.querySelector('.giscus')?.getAttribute('data-site')
-  if (!siteUrl) {
-    throw new Error('Site base URL not found while loading Giscus.')
-  }
   function loadGiscus() {
+    const giscusDiv = document.querySelector('.giscus')
+    if (!giscusDiv) {
+      throw new Error('Giscus div not found in the document.')
+    }
+    const origin = giscusDiv.getAttribute('data-origin')
+    const repo = giscusDiv.getAttribute('data-repo')
+    const repoId = giscusDiv.getAttribute('data-repo-id')
+    const category = giscusDiv.getAttribute('data-category')
+    const categoryId = giscusDiv.getAttribute('data-category-id')
+    const reactionsEnabled = giscusDiv.getAttribute('data-reactions-enabled')
     const theme = document.documentElement.getAttribute('data-theme')
+    if (!origin || !repo || !repoId || !category || !categoryId || !reactionsEnabled || !theme) {
+      throw new Error('Giscus configuration missing in the Giscus div.')
+    }
     const script = document.createElement('script')
     script.src = 'https://giscus.app/client.js'
-    script.setAttribute('data-repo', 'stelcodes/multiterm-astro')
-    script.setAttribute('data-repo-id', 'R_kgDOPNnBig')
-    script.setAttribute('data-category', 'Giscus')
-    script.setAttribute('data-category-id', 'DIC_kwDOPNnBis4CteOc')
+    script.setAttribute('data-repo', repo)
+    script.setAttribute('data-repo-id', repoId)
+    script.setAttribute('data-category', category)
+    script.setAttribute('data-category-id', categoryId)
     script.setAttribute('data-mapping', 'pathname')
     script.setAttribute('data-strict', '0')
-    script.setAttribute('data-reactions-enabled', '0')
+    script.setAttribute('data-reactions-enabled', reactionsEnabled)
     script.setAttribute('data-emit-metadata', '0')
     script.setAttribute('data-input-position', 'bottom')
-    script.setAttribute('data-theme', `${siteUrl}/giscus/${theme}.css`)
+    script.setAttribute('data-theme', `${origin}/giscus/${theme}.css`)
     script.setAttribute('data-lang', 'en')
     script.setAttribute('loading', 'lazy')
     script.crossOrigin = 'anonymous'
@@ -46,7 +74,7 @@ const siteUrl = Astro.url.origin
       return
     }
     giscusFrame.contentWindow?.postMessage(
-      { giscus: { setConfig: { theme: `${siteUrl}/giscus/${theme}.css` } } },
+      { giscus: { setConfig: { theme: `${origin}/giscus/${theme}.css` } } },
       'https://giscus.app',
     )
   }

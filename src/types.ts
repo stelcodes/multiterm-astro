@@ -102,6 +102,14 @@ export type SocialLinks = {
   email?: string
 }
 
+export type GiscusConfig = {
+  repo: string
+  repoId: string
+  category: string
+  categoryId: string
+  reactionsEnabled: boolean
+}
+
 export interface SiteConfig {
   site: string
   font: string
@@ -114,4 +122,5 @@ export interface SiteConfig {
   themes: ThemesConfig
   socialLinks: SocialLinks
   navLinks: NavLink[]
+  giscus: GiscusConfig | undefined
 }

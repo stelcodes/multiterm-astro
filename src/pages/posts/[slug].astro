@@ -9,6 +9,7 @@ import PostAddendum from '@components/PostAddendum.astro'
 import TableOfContents from '@components/TableOfContents.astro'
 import { Image } from 'astro:assets'
 import GiscusLoader from '@components/GiscusLoader.astro'
+import siteConfig from '../../site.config'
 
 export const getStaticPaths = (async () => {
   const posts = await getSortedPosts()
@@ -96,6 +97,12 @@ if (addendum.length > 0) {
   {(prev || next) && <DividerText text="More Posts" />}
   {prev && <PostPreview post={prev} />}
   {next && <PostPreview post={next} />}
-  <DividerText text="Comments" />
-  <GiscusLoader />
+  {
+    siteConfig.giscus && (
+      <>
+        <DividerText text="Comments" />
+        <GiscusLoader />
+      </>
+    )
+  }
 </Layout>
