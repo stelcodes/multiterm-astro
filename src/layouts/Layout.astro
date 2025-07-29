@@ -5,7 +5,7 @@ import Footer from '@components/Footer.astro'
 import LightDarkAutoThemeLoader from '@components/LightDarkAutoThemeLoader.astro'
 import SelectThemeLoader from '@components/SelectThemeLoader.astro'
 import siteConfig from '../site.config'
-import { resolveThemeColorStyles } from '@utils'
+import { pick, resolveThemeColorStyles } from '@utils'
 import crypto from 'crypto'
 
 interface Props {
@@ -71,8 +71,29 @@ const resolvedThemes = await resolveThemeColorStyles(siteConfig.themes.include)
 
 let cssLines: string[] = []
 for (const [themeId, themeStyles] of Object.entries(resolvedThemes)) {
+  const relevantStyles = pick(themeStyles, [
+    'foreground',
+    'background',
+    'accent',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'li',
+    'italic',
+    'a',
+    'hr',
+    'blue',
+    'green',
+    'red',
+    'yellow',
+    'magenta',
+    'cyan',
+  ])
   cssLines.push(`:root[data-theme="${themeId}"] {`)
-  for (const [key, value] of Object.entries(themeStyles)) {
+  for (const [key, value] of Object.entries(relevantStyles)) {
     cssLines.push(`--theme-${key}: ${value};`)
   }
   cssLines.push(`}`)
