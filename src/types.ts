@@ -48,7 +48,18 @@ const themeKeys = [
   'yellow',
   'magenta',
   'cyan',
+  // For Giscus syntax highlighting
+  'comment',
+  'constant',
+  'entity',
+  'entityTag',
+  'keyword',
+  'string',
+  'variable',
+  'regexp',
 ] as const
+
+console.log
 
 export type ThemeKey = (typeof themeKeys)[number]
 
