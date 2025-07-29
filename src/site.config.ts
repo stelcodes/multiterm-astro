@@ -150,6 +150,18 @@ const config: SiteConfig = {
     categoryId: 'DIC_kwDOPNnBis4CteOc',
     reactionsEnabled: true, // Enable reactions on post itself
   },
+  // Configuration for Giscus comments.
+  // To set up Giscus, follow the instructions at https://giscus.app/
+  // You'll need a GitHub repository with discussions enabled and the Giscus app installed.
+  // Take the values from the generated script tag at https://giscus.app and fill them in here.
+  // If you don't want to use Giscus, set this to undefined.
+  giscus: {
+    repo: 'stelcodes/multiterm-astro',
+    repoId: 'R_kgDOPNnBig',
+    category: 'Giscus',
+    categoryId: 'DIC_kwDOPNnBis4CteOc',
+    reactionsEnabled: true, // Enable reactions on post itself
+  },
 }
 
 export default config
