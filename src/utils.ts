@@ -6,11 +6,31 @@ export function dateString(date: Date) {
   return date.toISOString().split('T')[0]
 }
 
+export function flattenThemeColors(theme: ExpressiveCodeTheme): {
+  [key: string]: string
+} {
+  const scopedThemeSettings = theme.settings.reduce(
+    (acc, item) => {
+      const { scope, settings } = item
+      const { foreground } = settings
+      if (scope && foreground) {
+        for (const s of scope) {
+          acc[s] = foreground
+        }
+      }
+      return acc
+    },
+    {} as { [key: string]: string },
+  )
+  return { ...theme.colors, ...scopedThemeSettings }
+}
+
 export function resolveElementStyles(
   theme: ExpressiveCodeTheme,
   overrides?: ThemeStyles,
 ): { [key: string]: string } {
   const defaultStyles: ThemeStyles = {
+    // VSCode Command: Inspect Editor Tokens And Scopes
     foreground: ['editor.foreground'],
     background: ['editor.background'],
     accent: [
@@ -78,22 +98,6 @@ export function resolveElementStyles(
     cyan: ['terminal.ansiCyan', 'terminal.ansiBrightCyan'],
   }
   let result: { [key: string]: string } = {}
-  function flattenThemeColors(theme: ExpressiveCodeTheme): { [key: string]: string } {
-    const scopedThemeSettings = theme.settings.reduce(
-      (acc, item) => {
-        const { scope, settings } = item
-        const { foreground } = settings
-        if (scope && foreground) {
-          for (const s of scope) {
-            acc[s] = foreground
-          }
-        }
-        return acc
-      },
-      {} as { [key: string]: string },
-    )
-    return { ...theme.colors, ...scopedThemeSettings }
-  }
   const flattenedTheme = flattenThemeColors(theme)
   Object.entries(defaultStyles).forEach(([el, groups]) => {
     const overrideGroups = overrides ? overrides[el as keyof ThemeStyles] : []
