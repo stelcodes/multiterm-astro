@@ -4,6 +4,8 @@
 
 Check out the live example site [here](https://multiterm.stelclementine.com)!
 
+> v1.0.0 has been released! 🥳
+
 ![Example website screenshot](https://i.imgur.com/zZnrtj3.png)
 ![Example website screenshot](https://i.imgur.com/NPnMB8S.png)
 ![Example website screenshot](https://i.imgur.com/snuQqoY.png)
