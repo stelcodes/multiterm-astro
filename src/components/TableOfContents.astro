@@ -40,13 +40,13 @@ const toc = generateToc(headings)
 
 <details
   open
-  class="relative bg-foreground/6 px-8 py-6 w-full rounded-xl border-3 border-accent/10"
+  class="relative bg-foreground/6 lg:bg-transparent px-8 py-6 lg:pt-5 w-full rounded-xl border-3 lg:border-none border-accent/10 lg:sticky lg:top-12 lg:w-[300px] lg:order-2 lg:shrink-0"
 >
   <summary
     class="list-none marker:hidden marker:content-[''] before:content-['>'] before:text-accent before:font-semibold before:absolute before:left-3 cursor-pointer"
     >Table of Contents</summary
   >
-  <nav class="w-full">
+  <nav class="w-full text-sm">
     <ol class="mt-4 flex flex-col max-w-full">
       {toc.map((heading) => <TOCHeading heading={heading} />)}
     </ol>
