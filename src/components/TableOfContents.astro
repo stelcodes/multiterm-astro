@@ -40,7 +40,7 @@ const toc = generateToc(headings)
 
 <details
   open
-  class="relative bg-foreground/6 lg:bg-transparent px-8 py-6 lg:pt-5 w-full rounded-xl border-3 lg:border-none border-accent/10 lg:sticky lg:top-12 lg:w-[300px] lg:order-2 lg:shrink-0"
+  class="relative text-foreground/90 bg-foreground/6 xl:bg-transparent px-8 xl:pr-2 py-6 mt-5 xl:mt-0 w-full rounded-xl border-3 xl:border-none border-accent/10 xl:sticky xl:top-6 xl:basis-[280px] 2xl:basis-[340px] xl:order-2 xl:shrink-0"
 >
   <summary
     class="list-none marker:hidden marker:content-[''] before:content-['>'] before:text-accent before:font-semibold before:absolute before:left-3 cursor-pointer"
@@ -52,6 +52,19 @@ const toc = generateToc(headings)
     </ol>
   </nav>
 </details>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault()
+      const href = anchor.getAttribute('href')
+      if (!href) return
+      document.querySelector(href)?.scrollIntoView({
+        behavior: 'smooth',
+      })
+    })
+  })
+</script>
 
 <style>
   details[open] summary:before {
