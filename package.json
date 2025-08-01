@@ -8,7 +8,8 @@
     "build": "astro build",
     "postbuild": "pagefind --site dist",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.2",
@@ -29,6 +30,7 @@
     "astro": "^5.11.1",
     "astro-expressive-code": "^0.41.3",
     "astro-icon": "^1.1.5",
+    "color": "^5.0.0",
     "emoji-regex": "^10.4.0",
     "gemoji": "^8.1.0",
     "hast-util-from-html-isomorphic": "^2.0.0",

@@ -24,9 +24,8 @@
   --color-yellow: var(--theme-yellow);
   --color-magenta: var(--theme-magenta);
   --color-cyan: var(--theme-cyan);
-  --default-font-family: var(--theme-font);
+  --default-font-family: var(--theme-font), monospace;
 }
-
 
 header {
   view-transition-name: none;
@@ -38,6 +37,8 @@ header {
 
 body {
   @apply transition-colors;
+  font-display: block;
+  font-size-adjust: ex-height 0.53;
 }
 
 /* hide katex-html */
@@ -133,8 +134,11 @@ article img {
     }
   }
 
-  blockquote div.expressive-code {
-    @apply my-3;
+  blockquote,
+  aside {
+    div.expressive-code {
+      @apply my-3;
+    }
   }
 
   h1,
@@ -284,7 +288,7 @@ article img {
   }
 
   li {
-    @apply pl-2 my-4 marker:text-[var(--theme-li-marker)] marker:-left-5;
+    @apply pl-2 my-4 marker:text-[var(--theme-li)] marker:-left-5;
   }
 
   ul li {

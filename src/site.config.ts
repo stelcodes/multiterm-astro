@@ -6,7 +6,8 @@ const config: SiteConfig = {
   // The name of your site, used in the title and for SEO.
   title: 'Hamza Masood',
   // The description of your site, used for SEO and RSS feed.
-  description: 'A coder-ready Astro blog theme with 59 of your favorite color schemes to choose from',
+  description:
+    'A coder-ready Astro blog theme with 59 of your favorite color schemes to choose from',
   // The author of the site, used in the footer, SEO, and RSS feed.
   author: 'Hamza Masood',
   // Keywords for SEO, used in the meta tags.
@@ -34,7 +35,7 @@ const config: SiteConfig = {
       name: 'GitHub',
       url: 'https://github.com/hamza-m-masood',
       external: true,
-    }
+    },
   ],
   // The theming configuration for the site.
   themes: {
@@ -120,6 +121,18 @@ const config: SiteConfig = {
     linkedin: 'https://www.linkedin.com/in/hamza-m-masood/',
     bluesky: 'https://bsky.app/profile/hamzamasood.bsky.social',
     twitter: 'https://x.com/hamzamasoodx',
+  },
+  // Configuration for Giscus comments.
+  // To set up Giscus, follow the instructions at https://giscus.app/
+  // You'll need a GitHub repository with discussions enabled and the Giscus app installed.
+  // Take the values from the generated script tag at https://giscus.app and fill them in here.
+  // If you don't want to use Giscus, set this to undefined.
+  giscus: {
+    repo: 'stelcodes/multiterm-astro',
+    repoId: 'R_kgDOPNnBig',
+    category: 'Giscus',
+    categoryId: 'DIC_kwDOPNnBis4CteOc',
+    reactionsEnabled: true, // Enable reactions on post itself
   },
 }
 

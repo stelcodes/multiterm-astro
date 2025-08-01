@@ -4,9 +4,8 @@ import Header from '@components/Header.astro'
 import Footer from '@components/Footer.astro'
 import LightDarkAutoThemeLoader from '@components/LightDarkAutoThemeLoader.astro'
 import SelectThemeLoader from '@components/SelectThemeLoader.astro'
-import { loadShikiTheme } from 'astro-expressive-code'
 import siteConfig from '../site.config'
-import { resolveElementStyles } from '@utils'
+import { pick, resolveThemeColorStyles } from '@utils'
 import crypto from 'crypto'
 
 interface Props {
@@ -68,19 +67,33 @@ const themeHash = crypto
   .digest('hex')
   .slice(0, 8) // Truncate to the first 8 characters
 
-let resolvedThemes: { [key: string]: { [key: string]: string } } = {}
-for (const theme of siteConfig.themes.include) {
-  const loadedTheme = await loadShikiTheme(theme)
-  resolvedThemes[theme] = resolveElementStyles(
-    loadedTheme,
-    {}, // Pass an empty object to use default styles
-  )
-}
+const resolvedThemes = await resolveThemeColorStyles(siteConfig.themes.include)
 
 let cssLines: string[] = []
 for (const [themeId, themeStyles] of Object.entries(resolvedThemes)) {
+  const relevantStyles = pick(themeStyles, [
+    'foreground',
+    'background',
+    'accent',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'li',
+    'italic',
+    'a',
+    'hr',
+    'blue',
+    'green',
+    'red',
+    'yellow',
+    'magenta',
+    'cyan',
+  ])
   cssLines.push(`:root[data-theme="${themeId}"] {`)
-  for (const [key, value] of Object.entries(themeStyles)) {
+  for (const [key, value] of Object.entries(relevantStyles)) {
     cssLines.push(`--theme-${key}: ${value};`)
   }
   cssLines.push(`}`)
@@ -131,7 +144,7 @@ let generatedCss: string = cssLines.join('\n')
   </head>
   <body class="w-full h-full m-0 bg-background text-foreground">
     <div
-      class="flex flex-col max-w-[812px] min-h-screen border-accent/10 m-auto py-5 px-4 sm:px-6 md:p-10"
+      class="flex flex-col max-w-3xl min-h-screen border-accent/10 m-auto py-5 px-4 sm:px-6 md:p-10"
     >
       <Header />
       <main class="flex flex-col">

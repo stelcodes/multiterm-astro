@@ -1,6 +1,6 @@
 ---
 import Layout from '@layouts/Layout.astro'
-import { getSortedPosts, url } from '@utils'
+import { getSortedPosts } from '@utils'
 import { getCollection, render } from 'astro:content'
 import PostPreview from '@components/PostPreview.astro'
 import Pagination from '@components/Pagination.astro'
@@ -32,10 +32,10 @@ const sortedPosts = await getSortedPosts()
     )
   }
   <BlockHeader>Tags</BlockHeader>
-  <TagsSection posts={sortedPosts}/>
+  <TagsSection posts={sortedPosts} />
   <BlockHeader>Latest Posts</BlockHeader>
   {sortedPosts.slice(0, siteConfig.pageSize).map((post) => <PostPreview post={post} />)}
-  <Pagination nextLink={url('posts')} nextText="Archive" />
+  <Pagination nextLink="/posts" nextText="Archive" />
 </Layout>
 
 <style is:global>

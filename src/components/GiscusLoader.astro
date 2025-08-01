@@ -1,0 +1,108 @@
+---
+import siteConfig from '../site.config'
+// This will be localhost during development, site URL in prod
+const origin = Astro.url.origin
+const giscusConfig = siteConfig.giscus
+if (!giscusConfig) {
+  throw new Error('Giscus configuration is missing in site.config.ts')
+}
+const repo = giscusConfig.repo
+const repoId = giscusConfig.repoId
+const category = giscusConfig.category
+const categoryId = giscusConfig.categoryId
+const reactionsEnabled = giscusConfig.reactionsEnabled ? '1' : '0'
+---
+
+<div
+  class="giscus"
+  data-origin={origin}
+  data-repo={repo}
+  data-repo-id={repoId}
+  data-category={category}
+  data-category-id={categoryId}
+  data-reactions-enabled={reactionsEnabled}
+>
+</div>
+<script>
+  function loadGiscus() {
+    const giscusDiv = document.querySelector('.giscus')
+    if (!giscusDiv) {
+      throw new Error('Giscus div not found in the document.')
+    }
+    const origin = giscusDiv.getAttribute('data-origin')
+    const repo = giscusDiv.getAttribute('data-repo')
+    const repoId = giscusDiv.getAttribute('data-repo-id')
+    const category = giscusDiv.getAttribute('data-category')
+    const categoryId = giscusDiv.getAttribute('data-category-id')
+    const reactionsEnabled = giscusDiv.getAttribute('data-reactions-enabled')
+    const theme = document.documentElement.getAttribute('data-theme')
+    if (!origin || !repo || !repoId || !category || !categoryId || !reactionsEnabled || !theme) {
+      throw new Error('Giscus configuration missing in the Giscus div.')
+    }
+    const script = document.createElement('script')
+    script.src = 'https://giscus.app/client.js'
+    script.setAttribute('data-repo', repo)
+    script.setAttribute('data-repo-id', repoId)
+    script.setAttribute('data-category', category)
+    script.setAttribute('data-category-id', categoryId)
+    script.setAttribute('data-mapping', 'pathname')
+    script.setAttribute('data-strict', '0')
+    script.setAttribute('data-reactions-enabled', reactionsEnabled)
+    script.setAttribute('data-emit-metadata', '0')
+    // Setting this to 'bottom' doesn't work. Not sure why.
+    script.setAttribute('data-input-position', 'top')
+    script.setAttribute('data-theme', `${origin}/giscus/${theme}.css`)
+    script.setAttribute('data-lang', 'en')
+    script.setAttribute('loading', 'lazy')
+    script.crossOrigin = 'anonymous'
+    script.async = true
+    document.body.appendChild(script)
+  }
+  async function updateTheme(theme: string) {
+    console.log('Updating Giscus theme to:', theme)
+    let giscusFrame
+    // Try to find the Giscus iframe 3 times, in case it takes a moment to load
+    for (let i = 0; i < 3; i++) {
+      giscusFrame = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame')
+      if (giscusFrame) break
+      console.log('Giscus iframe not found, retrying...')
+      // Wait a moment before trying again
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+    }
+    // If the iframe is still not found, log an error and return
+    if (!giscusFrame) {
+      console.error('Giscus iframe not found after retries')
+      return
+    }
+    giscusFrame.contentWindow?.postMessage(
+      { giscus: { setConfig: { theme: `${origin}/giscus/${theme}.css` } } },
+      'https://giscus.app',
+    )
+  }
+  function listenForThemeChange() {
+    // Listen for changes to the data-theme attribute of the html element
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(async (mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+          const newTheme = document.documentElement.getAttribute('data-theme')
+          if (newTheme) {
+            await updateTheme(newTheme)
+          }
+        }
+      })
+    })
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
+  }
+  // Load Giscus script with correct theme and listen for theme changes
+  loadGiscus()
+  listenForThemeChange()
+</script>
+
+<style is:global>
+  iframe.giscus-frame {
+    margin-block: 32px;
+  }
+</style>

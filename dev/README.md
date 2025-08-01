@@ -1,0 +1,1 @@
+The `theme-data.json` file is auto-generated and only used during theme development as a reference. It is not imported or required to build the site. Feel free to delete the whole `dev` directory if you like.

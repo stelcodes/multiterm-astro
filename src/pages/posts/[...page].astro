@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import Layout from '@layouts/Layout.astro'
-import { getSortedPosts, url } from '@utils'
+import { getSortedPosts } from '@utils'
 import PostPreviewsWithYear from '@components/PostPreviewsWithYear.astro'
 import Pagination from '@components/Pagination.astro'
 import BlockHeader from '@components/BlockHeader.astro'
@@ -20,9 +20,9 @@ const { page } = Astro.props
   <BlockHeader>Archive</BlockHeader>
   <PostPreviewsWithYear posts={page.data} />
   <Pagination
-    prevLink={page.url.prev ? url(page.url.prev) : undefined}
+    prevLink={page.url.prev ? page.url.prev : undefined}
     prevText="Newer Posts"
-    nextLink={page.url.next ? url(page.url.next) : undefined}
+    nextLink={page.url.next ? page.url.next : undefined}
     nextText="Older Posts"
   />
 </Layout>

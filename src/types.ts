@@ -28,27 +28,64 @@ export type NavLink = {
 
 export type AdmonitionType = 'tip' | 'note' | 'important' | 'caution' | 'warning'
 
-export interface ThemeStyles {
-  foreground?: string[]
-  background?: string[]
-  accent?: string[]
-  h1?: string[]
-  h2?: string[]
-  h3?: string[]
-  h4?: string[]
-  h5?: string[]
-  h6?: string[]
-  li?: string[]
-  hr?: string[]
-  italic?: string[]
-  a?: string[]
-  blue?: string[]
-  green?: string[]
-  red?: string[]
-  yellow?: string[]
-  magenta?: string[]
-  cyan?: string[]
+const themeKeys = [
+  'foreground',
+  'background',
+  'accent',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'li',
+  'hr',
+  'italic',
+  'a',
+  'blue',
+  'green',
+  'red',
+  'yellow',
+  'magenta',
+  'cyan',
+  // For Giscus syntax highlighting
+  'comment',
+  'constant',
+  'entity',
+  'entityTag',
+  'keyword',
+  'string',
+  'variable',
+  'regexp',
+] as const
+
+console.log
+
+export type ThemeKey = (typeof themeKeys)[number]
+
+// const example: TextmateStyles = {
+//   foreground: ['editor.foreground'],
+//   background: ['editor.background'],
+// }
+export type TextmateStyles = {
+  [key in ThemeKey]: string[]
 }
+
+// const example: ColorStyles = {
+//   foreground: '#000000',
+//   background: '#ffffff',
+// }
+export type ColorStyles = {
+  [key in ThemeKey]: string
+}
+
+// const example: ThemesWithColorStyles = {
+//   'github-light': {
+//     foreground: '#24292e',
+//     background: '#ffffff',
+//   },
+// }
+export type ThemesWithColorStyles = Partial<Record<BundledShikiTheme, ColorStyles>>
 
 export interface ThemesConfig {
   default: BundledShikiTheme | 'auto'
@@ -65,6 +102,14 @@ export type SocialLinks = {
   email?: string
 }
 
+export type GiscusConfig = {
+  repo: string
+  repoId: string
+  category: string
+  categoryId: string
+  reactionsEnabled: boolean
+}
+
 export interface SiteConfig {
   site: string
   font: string
@@ -77,4 +122,5 @@ export interface SiteConfig {
   themes: ThemesConfig
   socialLinks: SocialLinks
   navLinks: NavLink[]
+  giscus: GiscusConfig | undefined
 }

@@ -40,17 +40,31 @@ const toc = generateToc(headings)
 
 <details
   open
-  class="relative bg-foreground/6 px-8 py-6 w-full rounded-xl border-3 border-accent/10"
+  class="relative text-foreground/90 bg-foreground/6 xl:bg-transparent px-8 xl:pr-2 py-6 mt-5 xl:mt-0 w-full rounded-xl border-3 xl:border-none border-accent/10 xl:sticky xl:top-10 xl:basis-[280px] 2xl:basis-[340px] xl:order-2 xl:shrink-0"
 >
-  <summary class="title marker:content-[''] before:content-['>'] before:text-accent before:font-semibold before:absolute before:left-3 cursor-pointer"
+  <summary
+    class="list-none marker:hidden marker:content-[''] before:content-['>'] before:text-accent before:font-semibold before:absolute before:left-3 cursor-pointer"
     >Table of Contents</summary
   >
-  <nav class="w-full">
+  <nav class="w-full text-sm">
     <ol class="mt-4 flex flex-col max-w-full">
       {toc.map((heading) => <TOCHeading heading={heading} />)}
     </ol>
   </nav>
 </details>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault()
+      const href = anchor.getAttribute('href')
+      if (!href) return
+      document.querySelector(href)?.scrollIntoView({
+        behavior: 'smooth',
+      })
+    })
+  })
+</script>
 
 <style>
   details[open] summary:before {
