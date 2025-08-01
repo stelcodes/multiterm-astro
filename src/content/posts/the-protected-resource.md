@@ -1,5 +1,5 @@
 ---
-title: "Part 2 - The OAuth Client"
+title: "Part 2 - The OAuth Protected Resource"
 published: 2025-08-01
 draft: false
 description: "Learning about the protect resource from the OAuth authorization grant type"
