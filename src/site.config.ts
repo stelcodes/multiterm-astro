@@ -28,6 +28,10 @@ const config: SiteConfig = {
       url: '/',
     },
     {
+      name: 'About',
+      url: '/about',
+    },
+    {
       name: 'Archive',
       url: '/posts',
     },
