@@ -35,6 +35,19 @@ header {
   navigation: auto;
 }
 
+* {
+  /* Custom scrollbar styles */
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--theme-accent) 20%, transparent) transparent;
+}
+
+html {
+  /* Slightly more accented scrollbar for better visibility */
+  scrollbar-color: color-mix(in oklab, var(--theme-accent) 30%, transparent) transparent !important;
+  /* Prevents layout from jumping when opening theme select or search dialog menus */
+  scrollbar-gutter: stable;
+}
+
 body {
   @apply transition-colors;
   font-display: block;
