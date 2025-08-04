@@ -3,7 +3,6 @@ import { defineConfig } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 import sitemap from '@astrojs/sitemap'
 import mdx from '@astrojs/mdx'
-import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import expressiveCode from 'astro-expressive-code'
 import siteConfig from './src/site.config'
@@ -39,7 +38,6 @@ export default defineConfig({
       remarkGemoji,
     ],
     rehypePlugins: [
-      rehypeSlug,
       [
         rehypeAutolinkHeadings,
         {
