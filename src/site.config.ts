@@ -2,7 +2,7 @@ import type { SiteConfig } from '@types'
 
 const config: SiteConfig = {
   // Absolute URL to the root of your published site, used for generating links and sitemaps.
-  site: 'https://multiterm-astro.stelclementine.com',
+  site: 'https://multiterm.stelclementine.com',
   // The name of your site, used in the title and for SEO.
   title: 'MultiTerm',
   // The description of your site, used for SEO and RSS feed.
@@ -127,6 +127,7 @@ const config: SiteConfig = {
     linkedin: 'https://github.com/stelcodes/multiterm-astro',
     bluesky: 'https://github.com/stelcodes/multiterm-astro',
     twitter: 'https://github.com/stelcodes/multiterm-astro',
+    rss: true, // Set to true to include an RSS feed link in the footer
   },
   // Configuration for Giscus comments.
   // To set up Giscus, follow the instructions at https://giscus.app/
