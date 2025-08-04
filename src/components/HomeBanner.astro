@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets'
-import ReactGithubCalendar from './ReactGithubCalendar'
-import type { FrontmatterImage } from '../types'
+import GitHubActivityCalendar from '@components/GitHubActivityCalendar.astro'
+import type { FrontmatterImage } from '@types'
 
 interface Props {
   avatarImage?: FrontmatterImage
@@ -29,18 +29,5 @@ const { avatarImage, githubCalendar } = Astro.props
       </div>
     </div>
   </div>
-  {
-    githubCalendar && (
-      <div class="h-42">
-        <ReactGithubCalendar username={githubCalendar} client:only />
-      </div>
-    )
-  }
+  {githubCalendar && <GitHubActivityCalendar username={githubCalendar} />}
 </div>
-
-<style is:global>
-  .github-calendar rect {
-    stroke: var(--theme-foreground) !important;
-    stroke-opacity: 0.1 !important;
-  }
-</style>
