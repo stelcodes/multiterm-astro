@@ -59,7 +59,8 @@ const toc = generateToc(headings)
       e.preventDefault()
       const href = anchor.getAttribute('href')
       if (!href) return
-      document.querySelector(href)?.scrollIntoView({
+      const id = href.startsWith('#') ? href.slice(1) : href
+      document.getElementById(id)?.scrollIntoView({
         behavior: 'smooth',
       })
     })
