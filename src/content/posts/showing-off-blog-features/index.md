@@ -3,6 +3,7 @@ title: 'Showing Off Blog Features'
 published: 2025-07-20
 draft: false
 tags: ['astro']
+toc: true
 coverImage:
   src: './cover.jpg'
   alt: 'A person with short, thick hair and prescription glasses sits at an organized workstation, using a magnification app to navigate a webpage. Their posture is proper and relaxed. On the desk: a computer, a mouse, a large desk lamp and a small notebook.'
