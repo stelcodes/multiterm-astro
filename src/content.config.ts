@@ -18,6 +18,7 @@ const postsCollection = defineCollection({
           alt: z.string(),
         })
         .optional(),
+      toc: z.boolean().optional().default(true),
     }),
 })
 
