@@ -88,4 +88,12 @@ const { socialLinks } = Astro.props
       </a>
     )
   }
+  {
+    socialLinks.rss && (
+      <a href="/rss.xml" class="social-link">
+        <span class="sr-only">RSS</span>
+        <Icon name="rss" class="size-7" />
+      </a>
+    )
+  }
 </div>
