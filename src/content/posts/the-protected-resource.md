@@ -1,6 +1,6 @@
 ---
 title: "Part 2 - The OAuth Protected Resource"
-published: 2025-08-01
+published: 2025-07-31
 draft: false
 description: "Learning about the protect resource from the OAuth authorization grant type"
 tags: ["OAuth Series"]
