@@ -1,0 +1,155 @@
+---
+// filepath: /src/components/ActivityCalendar.astro
+import { getYear, parseISO } from 'date-fns'
+import { DEFAULT_LABELS, LABEL_MARGIN, NAMESPACE } from '../constants'
+import {
+  generateEmptyData,
+  getClassName,
+  groupByWeeks,
+  range,
+  validateActivities,
+} from '../lib/calendar'
+import { getMonthLabels, initWeekdayLabels, maxWeekdayLabelWidth } from '../lib/label'
+import { createTheme } from '../lib/theme'
+import { styles } from './styles'
+
+const {
+  data: activities_uhhh,
+  blockMargin = 4,
+  blockRadius = 2,
+  blockSize = 12,
+  colorScheme = 'light',
+  fontSize = 14,
+  hideColorLegend = false,
+  hideMonthLabels = false,
+  hideTotalCount = false,
+  labels: labelsProp = undefined,
+  maxLevel: maxLevel_uhhh = 4,
+  loading = false,
+  showWeekdayLabels = false,
+  style: styleProp = {},
+  theme: themeProp = undefined,
+  totalCount: totalCountProp = undefined,
+  weekStart = 0,
+} = Astro.props
+
+const maxLevel = Math.max(1, maxLevel_uhhh)
+const theme = createTheme(themeProp, maxLevel + 1)
+const colorScale = theme[colorScheme]
+const activities = loading ? generateEmptyData() : activities_uhhh
+validateActivities(activities, maxLevel)
+const firstActivity = activities[0]
+const activityYear = getYear(parseISO(firstActivity.date))
+const weeks = groupByWeeks(activities, weekStart)
+const labels = { ...DEFAULT_LABELS, ...labelsProp }
+const labelHeight = hideMonthLabels ? 0 : fontSize + LABEL_MARGIN
+const weekdayLabels = initWeekdayLabels(showWeekdayLabels, weekStart)
+const weekdayLabelOffset = weekdayLabels.shouldShow
+  ? maxWeekdayLabelWidth(labels.weekdays, weekdayLabels, fontSize) + LABEL_MARGIN
+  : undefined
+
+function getDimensions() {
+  return {
+    width: weeks.length * (blockSize + blockMargin) - blockMargin,
+    height: labelHeight + (blockSize + blockMargin) * 7 - blockMargin,
+  }
+}
+const { width, height } = getDimensions()
+
+function getTotalCount() {
+  if (typeof totalCountProp === 'number') return totalCountProp
+  return activities.reduce((sum, activity) => sum + activity.count, 0)
+}
+---
+
+<article class={NAMESPACE} style={{ ...styleProp, ...styles.container(fontSize) }}>
+  <div class={getClassName('scroll-container')} style={styles.scrollContainer(fontSize)}>
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      class={getClassName('calendar')}
+      style={{ ...styles.calendar, marginLeft: weekdayLabelOffset }}
+    >
+      {
+        !hideMonthLabels && (
+          <g class={getClassName('legend-month')}>
+            {getMonthLabels(weeks, labels.months).map(({ label, weekIndex }) => (
+              <text
+                x={(blockSize + blockMargin) * weekIndex}
+                y={0}
+                dominant-baseline="hanging"
+                fill="currentColor"
+                key={weekIndex}
+              >
+                {label}
+              </text>
+            ))}
+          </g>
+        )
+      }
+      {
+        weeks.map((week, weekIndex) => (
+          <g
+            key={weekIndex}
+            transform={`translate(${(blockSize + blockMargin) * weekIndex}, 0)`}
+          >
+            {week.map((activity, dayIndex) => {
+              if (!activity) return null
+              return (
+                <rect
+                  x={0}
+                  y={labelHeight + (blockSize + blockMargin) * dayIndex}
+                  width={blockSize}
+                  height={blockSize}
+                  rx={blockRadius}
+                  ry={blockRadius}
+                  fill={colorScale[activity.level]}
+                  data-date={activity.date}
+                  data-level={activity.level}
+                  style={styles.rect(colorScheme)}
+                />
+              )
+            })}
+          </g>
+        ))
+      }
+    </svg>
+  </div>
+  {
+    !(hideTotalCount && hideColorLegend) && (
+      <footer
+        class={getClassName('footer')}
+        style={{ ...styles.footer.container, marginLeft: weekdayLabelOffset }}
+      >
+        {!hideTotalCount && (
+          <div class={getClassName('count')}>
+            {labels.totalCount
+              ? labels.totalCount
+                  .replace('{{count}}', String(getTotalCount()))
+                  .replace('{{year}}', String(activityYear))
+              : `${getTotalCount()} activities in ${activityYear}`}
+          </div>
+        )}
+        {!hideColorLegend && (
+          <div class={getClassName('legend-colors')} style={styles.footer.legend}>
+            <span style="margin-right: 0.4em">{labels.legend.less}</span>
+            {range(maxLevel + 1).map((level: number) => (
+              <svg width={blockSize} height={blockSize}>
+                <rect
+                  width={blockSize}
+                  height={blockSize}
+                  fill={colorScale[level]}
+                  rx={blockRadius}
+                  ry={blockRadius}
+                  style={styles.rect(colorScheme)}
+                />
+              </svg>
+            ))}
+            <span style="margin-left: 0.4em">{labels.legend.more}</span>
+          </div>
+        )}
+      </footer>
+    )
+  }
+</article>

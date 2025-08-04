@@ -23,7 +23,6 @@ import remarkMath from 'remark-math' /* for latex math support */
 import rehypeKatex from 'rehype-katex' /* again, for latex math support */
 import remarkGemoji from './src/plugins/remark-gemoji' /* for shortcode emoji support */
 import rehypePixelated from './src/plugins/rehype-pixelated' /* Custom plugin to handle pixelated images */
-import react from '@astrojs/react'
 
 // https://astro.build/config
 export default defineConfig({
@@ -83,7 +82,6 @@ export default defineConfig({
     }), // Must come after expressive-code integration
     mdx(),
     icon(),
-    react(),
   ],
   experimental: {
     contentIntellisense: true,
