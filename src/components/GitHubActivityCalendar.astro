@@ -190,19 +190,19 @@ const activityYear = getYear(parseISO(firstActivity.date))
 const weeks = groupByWeeks(activities, weekStart)
 const labels = {
   months: [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-],
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ],
   totalCount: `{{count}} contributions in ${year === 'last' ? 'the last year' : '{{year}}'}`,
   legend: {
     less: 'Less',
@@ -218,7 +218,13 @@ const height = labelHeight + (blockSize + blockMargin) * 7 - blockMargin
   id="github-activity-calendar"
   class="w-max max-w-full flex flex-col gap-2 text-sm"
 >
-  <div class="max-w-full overflow-x-auto pt-0.5">
+  <div
+    class="max-w-full overflow-x-auto pt-0.5"
+    style={{
+      // Don't cover the calendar with the scrollbar.
+      scrollbarGutter: 'stable',
+    }}
+  >
     <svg
       class="block visible"
       width={width}
