@@ -8,8 +8,6 @@ interface Props {
 const {
   heading: { children, depth, slug, text },
 } = Astro.props
-
-const prefix = '#'.repeat(depth)
 ---
 
 <>
@@ -24,8 +22,9 @@ const prefix = '#'.repeat(depth)
         ))
       }
     </div>
-    <a class="inline-block line-clamp-2 ml-3 xl:ml-2 py-1 hover:text-accent" href={`#${slug}`}
-      ><span aria-hidden="true" class="me-1.5">{prefix}</span>{text}</a
+    <a
+      class="inline-block line-clamp-2 ml-3 xl:ml-2 py-1 ps-1 hover:text-accent"
+      href={`#${slug}`}>{text}</a
     >
   </li>
   {
