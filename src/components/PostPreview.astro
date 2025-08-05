@@ -15,7 +15,7 @@ const { minutesRead } = remarkPluginFrontmatter
 const description = remarkPluginFrontmatter.description || post.data.description
 ---
 
-<article class="w-full py-5 my-4 border-accent/10">
+<article class="w-full py-5 my-1 md:my-4 border-accent/10">
   <h1 class="mb-3 text-2xl text-[var(--theme-h1)] font-semibold">
     <a href={`/posts/${post.id}`}># {post.data.title}</a>
   </h1>
