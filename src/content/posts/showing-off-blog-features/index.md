@@ -120,6 +120,22 @@ testing123
 testing123
 :::
 
+## GitHub Cards
+
+GitHub overview cards heavily inspired by [Astro Cactus](https://github.com/chrismwilliams/astro-theme-cactus).
+
+```md title="GitHub repo card example in markdown"
+::github{repo="stelcodes/multiterm-astro"}
+```
+
+::github{repo="stelcodes/multiterm-astro"}
+
+```md title="GitHub user card example in markdown"
+::github{user="withastro"}
+```
+
+::github{user="withastro"}
+
 ## Emoji :star_struck:
 
 Emojis can be added in markdown by including a literal emoji character or a GitHub shortcode. You can browse an unofficial database [here](https://emojibase.dev/emojis?shortcodePresets=github).

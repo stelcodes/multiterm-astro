@@ -14,6 +14,7 @@ import {
   remarkReadingTime,
   rehypeTitleFigure,
 } from './src/settings-utils'
+import { remarkGithubCard } from './src/plugins/remark-github-card'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
 import rehypeExternalLinks from 'rehype-external-links'
 import remarkDirective from 'remark-directive' /* Handle ::: directives as nodes */
@@ -34,6 +35,7 @@ export default defineConfig({
       [remarkDescription, { maxChars: 200 }],
       remarkReadingTime,
       remarkDirective,
+      remarkGithubCard,
       remarkAdmonitions,
       remarkMath,
       remarkGemoji,
