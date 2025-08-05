@@ -51,7 +51,11 @@ if (themeMode === 'light-dark-auto' && siteConfig.themes.include.length < 2) {
 }
 let defaultTheme = siteConfig.themes.default || siteConfig.themes.include[0]
 let includedThemes = siteConfig.themes.include as string[]
-if (!includedThemes.includes(defaultTheme)) {
+const themeNotIncluded = includedThemes.includes(defaultTheme)
+if (
+  (themeMode !== 'light-dark-auto' && themeNotIncluded) ||
+  (themeMode === 'light-dark-auto' && defaultTheme !== 'auto' && themeNotIncluded)
+) {
   console.warn(
     `Default theme "${defaultTheme}" not found in themes. Using first theme: "${siteConfig.themes.include[0]}".`,
   )
