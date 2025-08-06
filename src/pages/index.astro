@@ -21,6 +21,9 @@ if (home.length > 0) {
   homeGithubCalendar = homeEntry.data.githubCalendar
 }
 const sortedPosts = await getSortedPosts()
+const postsHaveTags = sortedPosts.some(
+  (post) => post.data.tags && post.data.tags.length > 0,
+)
 ---
 
 <Layout>
@@ -31,11 +34,25 @@ const sortedPosts = await getSortedPosts()
       </HomeBanner>
     )
   }
-  <BlockHeader>Tags</BlockHeader>
-  <TagsSection posts={sortedPosts} />
-  <BlockHeader>Latest Posts</BlockHeader>
-  {sortedPosts.slice(0, siteConfig.pageSize).map((post) => <PostPreview post={post} />)}
-  <Pagination nextLink="/posts" nextText="Archive" />
+  {
+    postsHaveTags && (
+      <>
+        <BlockHeader>Tags</BlockHeader>
+        <TagsSection posts={sortedPosts} />
+      </>
+    )
+  }
+  {
+    sortedPosts.length > 0 && (
+      <>
+        <BlockHeader>Latest Posts</BlockHeader>
+        {sortedPosts.slice(0, siteConfig.pageSize).map((post) => (
+          <PostPreview post={post} />
+        ))}
+        <Pagination nextLink="/posts" nextText="Archive" />
+      </>
+    )
+  }
 </Layout>
 
 <style is:global>
