@@ -1,0 +1,32 @@
+---
+import { dateString } from '@utils'
+import { renderComponentToString } from 'astro/runtime/server/render/component.js'
+import { render, type CollectionEntry } from 'astro:content'
+
+interface Props {
+  post: CollectionEntry<'posts'>
+  class?: string
+}
+
+const { post, class: className } = Astro.props
+const { remarkPluginFrontmatter } = await render(post)
+const { minutesRead } = remarkPluginFrontmatter
+---
+
+<div class:list={[className, 'text-foreground/80']}>
+  <time>{dateString(post.data.published)}</time>
+  {
+    post.data.author && (
+      <span class="before:content-['::'] before:inline-block before:mx-0.5">
+        {post.data.author}
+      </span>
+    )
+  }
+  {
+    minutesRead && (
+      <span class="before:content-['::'] before:inline-block before:mx-0.5">
+        {minutesRead}
+      </span>
+    )
+  }
+</div>

@@ -11,6 +11,7 @@ import { Image } from 'astro:assets'
 import GiscusLoader from '@components/GiscusLoader.astro'
 import siteConfig from '../../site.config'
 import Tags from '@components/Tags.astro'
+import PostInfo from '@components/PostInfo.astro'
 
 export const getStaticPaths = (async () => {
   const posts = await getSortedPosts()
@@ -60,22 +61,15 @@ if (addendum.length > 0) {
       <h1 class="mb-4 text-[1.75rem] text-[var(--theme-h1)] font-semibold">
         # {postData.title}
       </h1>
-      <div class="text-foreground/80 mb-1">
-        <time>{dateString(postData.published)}</time>
+      <div class="my-2 border-l-2 border-accent/80 pl-4 py-2">
+        <PostInfo post={post} class="mb-1" />
         {
-          postData.author && (
-            <span class="before:content-['::'] before:inline-block before:mx-0.5">
-              {postData.author}
-            </span>
+          postData.tags && (
+            <div class="mt-4">
+              <Tags tags={postData.tags} />
+            </div>
           )
         }
-      {
-        postData.tags && (
-          <div class="mt-4">
-            <Tags tags={postData.tags} />
-          </div>
-        )
-      }
       </div>
     </div>
     <!-- <hr class="border-accent/10 border-2 rounded-xl hidden lg:block" /> -->

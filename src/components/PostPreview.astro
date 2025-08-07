@@ -3,7 +3,8 @@ import { dateString } from '@utils'
 import { Icon } from 'astro-icon/components'
 import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
-import Tags from './Tags.astro'
+import Tags from '@components/Tags.astro'
+import PostInfo from '@components/PostInfo.astro'
 
 interface Props {
   post: CollectionEntry<'posts'>
@@ -12,7 +13,6 @@ interface Props {
 const { post } = Astro.props
 
 const { remarkPluginFrontmatter } = await render(post)
-const { minutesRead } = remarkPluginFrontmatter
 const description = remarkPluginFrontmatter.description || post.data.description
 ---
 
@@ -20,23 +20,7 @@ const description = remarkPluginFrontmatter.description || post.data.description
   <h1 class="mb-3 text-2xl text-[var(--theme-h1)] font-semibold">
     <a href={`/posts/${post.id}`}># {post.data.title}</a>
   </h1>
-  <div class="text-foreground/80 my-3">
-    <time>{dateString(post.data.published)}</time>
-    {
-      post.data.author && (
-        <span class="before:content-['::'] before:inline-block before:mx-0.5">
-          {post.data.author}
-        </span>
-      )
-    }
-    {
-      minutesRead && (
-        <span class="before:content-['::'] before:inline-block before:mx-0.5">
-          {minutesRead}
-        </span>
-      )
-    }
-  </div>
+  <PostInfo post={post} class="my-3" />
   {description && <p class="my-4 text-base/7 text-foreground">{description}</p>}
   {
     post.data.tags && (
