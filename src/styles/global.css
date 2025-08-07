@@ -99,6 +99,11 @@ article img {
     @apply text-sm font-mono text-foreground/90 bg-foreground/5 px-2.5 py-1 rounded-lg;
   }
 
+  & > *:not(div.expressive-code, img, figure, video, hr),
+  figcaption {
+    @apply md:mx-2;
+  }
+
   div.expressive-code {
     @apply my-8;
 
@@ -298,7 +303,7 @@ article img {
 
   ul,
   ol {
-    @apply ml-9.5;
+    @apply pl-8 sm:pl-9.5;
   }
 
   li {
@@ -317,8 +322,13 @@ article img {
     @apply h-0.5 my-16 bg-[var(--theme-hr)] border-none rounded-xl;
   }
 
-  blockquote {
-    @apply relative bg-foreground/6 rounded-xl py-6 px-8 before:content-['>'] before:block before:absolute before:text-accent before:font-bold before:left-3;
+  blockquote,
+  aside {
+    @apply px-6;
+
+    & > *:not(div.expressive-code, img, figure, video, hr), figcaption {
+      @apply md:mx-2;
+    }
 
     p:first-child {
       @apply mt-0;
@@ -329,16 +339,12 @@ article img {
     }
   }
 
+  blockquote {
+    @apply relative bg-foreground/6 rounded-xl py-6 before:content-['>'] before:block before:absolute before:text-accent before:font-bold before:left-3;
+  }
+
   aside {
-    @apply bg-foreground/8 rounded-xl py-6 px-8;
-
-    p:first-child {
-      @apply mt-0;
-    }
-
-    p:last-child {
-      @apply mb-0;
-    }
+    @apply bg-foreground/8 rounded-xl py-6;
 
     p.admonition-title {
       @apply mb-2 inline-block font-semibold before:content-['>'] before:mr-2;

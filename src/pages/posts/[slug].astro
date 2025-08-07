@@ -55,33 +55,35 @@ if (addendum.length > 0) {
         />
       )
     }
-    <h1 class="mb-3 text-[1.75rem] text-[var(--theme-h1)] font-semibold">
-      # {postData.title}
-    </h1>
-    <div class="text-foreground/80 mb-2.5">
-      <time>{dateString(postData.published)}</time>
+    <div class="md:mx-2">
+      <h1 class="mb-3 text-[1.75rem] text-[var(--theme-h1)] font-semibold">
+        # {postData.title}
+      </h1>
+      <div class="text-foreground/80 mb-2.5">
+        <time>{dateString(postData.published)}</time>
+        {
+          postData.author && (
+            <span class="before:content-['::'] before:inline-block before:mx-0.5">
+              {postData.author}
+            </span>
+          )
+        }
+      </div>
       {
-        postData.author && (
-          <span class="before:content-['::'] before:inline-block before:mx-0.5">
-            {postData.author}
-          </span>
+        postData.tags && (
+          <div class="text-accent mb-5 lg:mb-0">
+            {postData.tags.map((tag) => (
+              <a
+                class="underline mr-4 inline-block"
+                href={`/tags/${encodeURIComponent(tag)}`}
+              >
+                #{tag}
+              </a>
+            ))}
+          </div>
         )
       }
     </div>
-    {
-      postData.tags && (
-        <div class="text-accent mb-5 lg:mb-0">
-          {postData.tags.map((tag) => (
-            <a
-              class="underline mr-4 inline-block"
-              href={`/tags/${encodeURIComponent(tag)}`}
-            >
-              #{tag}
-            </a>
-          ))}
-        </div>
-      )
-    }
     <!-- <hr class="border-accent/10 border-2 rounded-xl hidden lg:block" /> -->
     <div class="flex flex-col xl:gap-4 2xl:gap-18 xl:flex-row xl:items-start">
       {postData.toc && headings.length > 0 && <TableOfContents headings={headings} />}
