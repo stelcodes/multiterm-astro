@@ -71,6 +71,10 @@ button:active {
   @apply outline-1 outline-accent outline-offset-2;
 }
 
+a, button {
+  @apply hover:cursor-pointer;
+}
+
 a.button {
   @apply inline-flex text-accent border-3 border-accent/30 border-double py-1.5 px-3 whitespace-nowrap hover:bg-accent/10 rounded-xl transition-colors;
 }
@@ -341,7 +345,7 @@ article img {
   }
 
   blockquote {
-    @apply relative bg-foreground/6 before:content-['>'] before:block before:absolute before:text-accent before:font-bold before:left-3;
+    @apply relative bg-foreground/5 before:content-['>'] before:block before:absolute before:text-accent before:font-bold before:left-3;
   }
 
   aside {
