@@ -71,7 +71,8 @@ button:active {
   @apply outline-1 outline-accent outline-offset-2;
 }
 
-a, button {
+a,
+button {
   @apply hover:cursor-pointer;
 }
 
@@ -110,6 +111,12 @@ article img {
 
   div.expressive-code {
     @apply my-8;
+
+    /* Prevent italics in code blocks */
+    /* Feel free to remove this if you want italics */
+    div.code span {
+      font-style: normal !important;
+    }
 
     figure {
       @apply border-2 border-foreground/8 !rounded-xl;
