@@ -3,6 +3,7 @@ import { dateString } from '@utils'
 import { Icon } from 'astro-icon/components'
 import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
+import Tags from './Tags.astro'
 
 interface Props {
   post: CollectionEntry<'posts'>
@@ -39,15 +40,8 @@ const description = remarkPluginFrontmatter.description || post.data.description
   {description && <p class="my-4 text-base/7 text-foreground">{description}</p>}
   {
     post.data.tags && (
-      <div class="text-accent mb-6">
-        {post.data.tags.map((tag) => (
-          <a
-            class="underline mr-4 inline-block"
-            href={`/tags/${encodeURIComponent(tag)}`}
-          >
-            #{tag}
-          </a>
-        ))}
+      <div class="mb-6">
+        <Tags tags={post.data.tags} />
       </div>
     )
   }

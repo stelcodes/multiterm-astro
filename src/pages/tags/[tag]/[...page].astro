@@ -23,10 +23,11 @@ export const getStaticPaths = (async ({ paginate }) => {
 
 const { page } = Astro.props
 const { tag } = Astro.params
+const title = `Tag: ${tag}`
 ---
 
-<Layout>
-  <BlockHeader>#{tag}</BlockHeader>
+<Layout title={title} description={`All posts tagged with ${tag}`}>
+  <BlockHeader>{title}</BlockHeader>
   <PostPreviewsWithYear posts={page.data} />
   <Pagination
     prevLink={page.url.prev ? encodeURI(page.url.prev) : undefined}
