@@ -104,7 +104,7 @@ article img {
     @apply text-sm font-mono text-foreground/90 bg-foreground/5 px-2.5 py-1 rounded-lg;
   }
 
-  & > *:not(div.expressive-code, img, figure, video, hr),
+  & > *:not(div.expressive-code, img, figure, video, hr, blockquote, aside),
   figcaption {
     @apply md:mx-2;
   }
