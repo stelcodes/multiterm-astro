@@ -2,6 +2,7 @@ import rss from '@astrojs/rss'
 import siteConfig from '../site.config'
 import type { AstroGlobal } from 'astro'
 import { getCollection } from 'astro:content'
+import { getSortedPosts } from '@utils'
 import sanitizeHtml from 'sanitize-html'
 import MarkdownIt from 'markdown-it'
 const parser = new MarkdownIt()
@@ -14,7 +15,7 @@ export async function GET(_context: AstroGlobal) {
     )
     return
   }
-  const posts = await getCollection('posts')
+  const posts = await getSortedPosts()
   return rss({
     stylesheet: '/rss.xsl',
     title: siteConfig.title,
