@@ -53,20 +53,6 @@ const toc = generateToc(headings)
   </nav>
 </details>
 
-<script>
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault()
-      const href = anchor.getAttribute('href')
-      if (!href) return
-      const id = href.startsWith('#') ? href.slice(1) : href
-      document.getElementById(id)?.scrollIntoView({
-        behavior: 'smooth',
-      })
-    })
-  })
-</script>
-
 <style>
   details[open] summary:before {
     transform: rotate(90deg);

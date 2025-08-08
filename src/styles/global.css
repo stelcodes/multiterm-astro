@@ -46,6 +46,7 @@ html {
   scrollbar-color: color-mix(in oklab, var(--theme-accent) 30%, transparent) transparent !important;
   /* Prevents layout from jumping when opening theme select or search dialog menus */
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 body {
