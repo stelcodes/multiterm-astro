@@ -1,0 +1,36 @@
+---
+import PostPreview from '~/components/PostPreview.astro'
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+  seriesPosts: CollectionEntry<'posts'>[]
+  currentPostId: string
+}
+
+const { seriesPosts, currentPostId } = Astro.props
+
+// Sort posts by published date
+const sortedPosts = seriesPosts.sort(
+  (a, b) => new Date(a.data.published).getTime() - new Date(b.data.published).getTime(),
+)
+---
+
+<div class="my-8 ml-12">
+  <div class="space-y-4">
+    {
+      sortedPosts.map((post, index) => {
+        const isCurrent = post.id === currentPostId
+        return (
+          <div class={`relative ${isCurrent ? 'bg-accent/10 rounded-lg p-4' : ''}`}>
+            <div
+              class={`absolute -left-12 top-4 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${isCurrent ? 'bg-accent text-white' : 'bg-foreground/20 text-foreground/80'}`}
+            >
+              {index + 1}
+            </div>
+            <PostPreview post={post} />
+          </div>
+        )
+      })
+    }
+  </div>
+</div>
