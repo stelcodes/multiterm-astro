@@ -220,3 +220,29 @@ export async function getSortedPosts() {
   })
   return sortedPosts
 }
+
+export async function getSortedPostsBySeries(series: string) {
+  const sortedPosts = await getSortedPosts()
+  return sortedPosts.filter((p) => series === p.data.series)
+}
+
+// type SeriesData = {
+//   [series: string]: CollectionEntry<'posts'>[]
+// }
+
+// export async function getSortedPostsBySeries(
+//   series: string,
+//   posts?: CollectionEntry<'posts'>[],
+// ): SeriesData {
+//   const sortedPosts = posts || (await getSortedPosts())
+//   return sortedPosts.reduce<SeriesData>((acc, post) => {
+//     const series = post.data.series
+//     if (series) {
+//       if (!acc[series]) {
+//         acc[series] = []
+//       }
+//       acc[series].push(post)
+//     }
+//     return acc
+//   }, {})
+// }

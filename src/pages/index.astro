@@ -8,6 +8,7 @@ import BlockHeader from '~/components/BlockHeader.astro'
 import HomeBanner from '~/components/HomeBanner.astro'
 import siteConfig from '~/site.config'
 import TagsSection from '~/components/TagsSection.astro'
+import SeriesSection from '~/components/SeriesSection.astro'
 
 const home = await getCollection('home')
 let HomeContent
@@ -24,6 +25,8 @@ const sortedPosts = await getSortedPosts()
 const postsHaveTags = sortedPosts.some(
   (post) => post.data.tags && post.data.tags.length > 0,
 )
+
+const postsHaveSeries = sortedPosts.some((post) => post.data.series)
 ---
 
 <Layout>
@@ -36,21 +39,29 @@ const postsHaveTags = sortedPosts.some(
   }
   {
     postsHaveTags && (
-      <>
+      <section>
         <BlockHeader>Tags</BlockHeader>
         <TagsSection posts={sortedPosts} />
-      </>
+      </section>
+    )
+  }
+  {
+    postsHaveSeries && (
+      <section>
+        <BlockHeader>Series</BlockHeader>
+        <SeriesSection posts={sortedPosts} />
+      </section>
     )
   }
   {
     sortedPosts.length > 0 && (
-      <>
+      <section>
         <BlockHeader>Latest Posts</BlockHeader>
-        {sortedPosts.slice(0, siteConfig.pageSize).map((post) => (
+        {sortedPosts.slice(0, Math.floor(siteConfig.pageSize / 2)).map((post) => (
           <PostPreview post={post} />
         ))}
         <Pagination nextLink="/posts" nextText="Archive" />
-      </>
+      </section>
     )
   }
 </Layout>

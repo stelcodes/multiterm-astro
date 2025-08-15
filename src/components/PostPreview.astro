@@ -19,8 +19,8 @@ const description = remarkPluginFrontmatter.description || post.data.description
   <h1 class="mb-3 text-2xl text-heading1 font-semibold">
     <a href={`/posts/${post.id}`}># {post.data.title}</a>
   </h1>
-  <PostInfo post={post} class="my-3" />
-  {description && <p class="my-4 text-base/7 text-foreground">{description}</p>}
+  <PostInfo post={post} class="mb-3 mt-4" />
+  {description && <p class="pl-0.5 my-4 text-base/7 text-foreground">{description}</p>}
   {
     post.data.tags && (
       <div class="mb-6">

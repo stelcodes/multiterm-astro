@@ -40,6 +40,14 @@ if (addendum.length > 0) {
   AddendumContent = Content
   addendumAvatarImage = addendumEntry.data.avatarImage
 }
+
+// Get series posts if this post is part of a series
+let seriesPosts: (typeof post)[] = []
+if (postData.series) {
+  const allPosts = await getSortedPosts()
+  seriesPosts = allPosts.filter((p) => postData.series === p.data.series)
+}
+const showSeries = seriesPosts.length > 1
 ---
 
 <Layout
@@ -91,9 +99,22 @@ if (addendum.length > 0) {
       </PostAddendum>
     )
   }
-  {(prev || next) && <DividerText text="More Posts" />}
-  {prev && <PostPreview post={prev} />}
-  {next && <PostPreview post={next} />}
+  {
+    showSeries ? (
+      <>
+        <DividerText text={`${postData.series} Series`} />
+        {seriesPosts.map((seriesPost) => (
+          <PostPreview post={seriesPost} />
+        ))}
+      </>
+    ) : prev || next ? (
+      <>
+        <DividerText text="More Posts" />
+        {prev && <PostPreview post={prev} />}
+        {next && <PostPreview post={next} />}
+      </>
+    ) : null
+  }
   {
     siteConfig.giscus && (
       <>

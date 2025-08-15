@@ -1,6 +1,5 @@
 ---
-import { dateString } from '~/utils'
-import { renderComponentToString } from 'astro/runtime/server/render/component.js'
+import { dateString, getSortedPostsBySeries } from '~/utils'
 import { render, type CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -11,22 +10,45 @@ interface Props {
 const { post, class: className } = Astro.props
 const { remarkPluginFrontmatter } = await render(post)
 const { minutesRead } = remarkPluginFrontmatter
+const series = post.data.series
+let seriesNumber: number | undefined
+let seriesTotal: number | undefined
+if (series) {
+  const seriesPosts = await getSortedPostsBySeries(series)
+  seriesNumber = seriesPosts.findIndex((p) => p.id === post.id) + 1
+  seriesTotal = seriesPosts.length
+}
+const isPartOfSeries = series && seriesNumber && seriesTotal
 ---
 
 <div class:list={[className, 'text-foreground/80']}>
-  <time>{dateString(post.data.published)}</time>
-  {
-    post.data.author && (
-      <span class="before:content-['::'] before:inline-block before:mx-0.5">
-        {post.data.author}
-      </span>
-    )
-  }
-  {
-    minutesRead && (
-      <span class="before:content-['::'] before:inline-block before:mx-0.5">
-        {minutesRead}
-      </span>
-    )
-  }
+  <div class="flex flex-col gap-4 sm:gap-2 sm:flex-wrap items-start sm:items-center sm:flex-row">
+    {
+      isPartOfSeries && (
+        <a
+          class="shrink-0 rounded-2xl py-[3px] px-3.5 bg-foreground/1 me-2.5 hover:bg-foreground/5 transition-colors border-1 border-foreground/16 hover:border-foreground/20"
+          href={`/series/${encodeURIComponent(series)}`}
+        >
+          {series} {seriesNumber} / {seriesTotal}
+        </a>
+      )
+    }
+    <div class="shrink-0 pl-0.5 text-[17px] sm:text-base">
+      <time>{dateString(post.data.published)}</time>
+      {
+        post.data.author && (
+          <span class="before:content-['::'] before:inline-block before:mx-0.5">
+            {post.data.author}
+          </span>
+        )
+      }
+      {
+        minutesRead && (
+          <span class="before:content-['::'] before:inline-block before:mx-0.5">
+            {minutesRead}
+          </span>
+        )
+      }
+    </div>
+  </div>
 </div>

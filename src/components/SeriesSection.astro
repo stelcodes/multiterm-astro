@@ -6,25 +6,24 @@ interface Props {
 }
 
 const { posts } = Astro.props
-const tags = new Set<string>([...posts.flatMap((post) => post.data.tags || [])])
 
-const tagsWithCount = Array.from(tags)
-  .map((tag) => {
-    const count = posts.filter((post) => post.data.tags?.includes(tag)).length
-    return { tag, count }
-  })
-  .sort((a, b) => b.count - a.count)
+const seriesWithCount = posts.reduce<Record<string, number>>((acc, post) => {
+  if (post.data.series) {
+    acc[post.data.series] = (acc[post.data.series] || 0) + 1
+  }
+  return acc
+}, {})
 ---
 
 <ul class="flex flex-wrap gap-x-3 gap-y-4 my-5">
   {
-    tagsWithCount.map(({ tag, count }) => (
+    Object.entries(seriesWithCount).map(([series, count]) => (
       <li>
         <a
-          href={`/tags/${encodeURIComponent(tag)}`}
+          href={`/series/${encodeURIComponent(series)}`}
           class="flex items-start gap-2.5 py-2 pl-4 pr-3 bg-accent/7 rounded-3xl border-transparent hover:border-accent/20 border-1 text-foreground/90"
         >
-          {tag}
+          {series}
           <span class="rounded-full bg-foreground/7 text-foreground/90 px-2 py-1 text-xs font-semibold">
             {count}
           </span>

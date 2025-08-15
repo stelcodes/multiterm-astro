@@ -1,0 +1,30 @@
+---
+import type { GetStaticPaths } from 'astro'
+import Layout from '~/layouts/Layout.astro'
+import { getSortedPosts } from '~/utils'
+import BlockHeader from '~/components/BlockHeader.astro'
+import PostPreview from '~/components/PostPreview.astro'
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const sortedPosts = await getSortedPosts()
+  const allSeries = new Set(sortedPosts.map((post) => post.data.series).filter(Boolean))
+  return [...allSeries].map((series) => {
+    const seriesPosts = sortedPosts.filter((post) => post.data.series === series)
+    return {
+      params: { series },
+      props: { posts: seriesPosts },
+    }
+  })
+}) satisfies GetStaticPaths
+
+const { posts } = Astro.props
+const series = Astro.params.series
+const title = `Series: ${series}`
+---
+
+<Layout title={title} description={`All posts in the ${series} series`}>
+  <div class="mt-2 sm:mt-0">
+    <BlockHeader>{title}</BlockHeader>
+    {posts.map((post) => <PostPreview post={post} />)}
+  </div>
+</Layout>
