@@ -57,9 +57,12 @@ const postsHaveSeries = sortedPosts.some((post) => post.data.series)
     sortedPosts.length > 0 && (
       <section>
         <BlockHeader>Latest Posts</BlockHeader>
-        {sortedPosts.slice(0, Math.floor(siteConfig.pageSize / 2)).map((post) => (
-          <PostPreview post={post} />
-        ))}
+        {sortedPosts
+          .reverse()
+          .slice(0, Math.floor(siteConfig.pageSize / 2))
+          .map((post) => (
+            <PostPreview post={post} />
+          ))}
         <Pagination nextLink="/posts" nextText="Archive" />
       </section>
     )

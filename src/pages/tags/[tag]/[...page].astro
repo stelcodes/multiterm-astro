@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import Layout from '~/layouts/Layout.astro'
-import { getSortedPosts, getTagData } from '~/utils'
+import { getTagData } from '~/utils'
 import Pagination from '~/components/Pagination.astro'
 import BlockHeader from '~/components/BlockHeader.astro'
 import siteConfig from '~/site.config'
@@ -12,7 +12,7 @@ export const getStaticPaths = (async ({ paginate }) => {
   const tagData = await getTagData()
   const pages = Object.entries(tagData).flatMap(([tag, posts]) => {
     // Use flatMap to lift the posts for each tag into a single array
-    return paginate(posts, { params: { tag }, pageSize: siteConfig.pageSize })
+    return paginate(posts.reverse(), { params: { tag }, pageSize: siteConfig.pageSize })
   })
   return pages
 }) satisfies GetStaticPaths
