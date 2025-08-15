@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import Layout from '~/layouts/Layout.astro'
-import { getAllSeries, getSortedPosts } from '~/utils'
+import { getAllSeries, getAllTags, getSortedPosts } from '~/utils'
 import PostPreview from '~/components/PostPreview.astro'
 import DividerText from '~/components/DividerText.astro'
 import { getCollection, render } from 'astro:content'
@@ -42,13 +42,21 @@ if (addendum.length > 0) {
   addendumAvatarImage = addendumEntry.data.avatarImage
 }
 
+const sortedPosts = await getSortedPosts()
+
 // Get series posts if this post is part of a series
 let series: Collation | undefined
 if (postData.series) {
-  const allSeries = await getAllSeries()
+  const allSeries = await getAllSeries(sortedPosts)
   series = allSeries.find((s) => s.title === postData.series)
 }
 const showSeries = series && series.posts.length > 1
+
+let tags: Collation[] | undefined
+if (postData.tags && postData.tags.length > 0) {
+  const allTags = await getAllTags(sortedPosts)
+  tags = allTags.filter((tag) => postData.tags.includes(tag.title))
+}
 ---
 
 <Layout
@@ -76,9 +84,9 @@ const showSeries = series && series.posts.length > 1
       <div class="my-2 border-l-2 border-accent/80 pl-4 py-2">
         <PostInfo post={post} class="mb-1" />
         {
-          postData.tags && (
+          tags && (
             <div class="mt-4">
-              <Tags tags={postData.tags} />
+              <Tags tags={tags} />
             </div>
           )
         }

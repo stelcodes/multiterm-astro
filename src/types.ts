@@ -52,8 +52,6 @@ export type Collation = {
   posts: CollectionEntry<'posts'>[]
 }
 
-export type TagData = Record<string, CollectionEntry<'posts'>[]>
-
 export type NavLink = {
   name: string
   url: string

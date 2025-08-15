@@ -4,6 +4,8 @@ import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
 import Tags from '~/components/Tags.astro'
 import PostInfo from '~/components/PostInfo.astro'
+import type { Collation } from '~/types'
+import { getAllTags } from '~/utils'
 
 interface Props {
   post: CollectionEntry<'posts'>
@@ -13,6 +15,11 @@ const { post } = Astro.props
 
 const { remarkPluginFrontmatter } = await render(post)
 const description = remarkPluginFrontmatter.description || post.data.description
+let tags: Collation[] | undefined
+if (post.data.tags && post.data.tags.length > 0) {
+  const allTags = await getAllTags()
+  tags = allTags.filter((tag) => post.data.tags.includes(tag.title))
+}
 ---
 
 <article class="w-full py-5 my-1 md:my-4 border-accent/10">
@@ -22,9 +29,9 @@ const description = remarkPluginFrontmatter.description || post.data.description
   <PostInfo post={post} class="mb-3 mt-4" />
   {description && <p class="pl-0.5 my-4 text-base/7 text-foreground">{description}</p>}
   {
-    post.data.tags && (
+    tags && (
       <div class="mb-6">
-        <Tags tags={post.data.tags} />
+        <Tags tags={tags} />
       </div>
     )
   }

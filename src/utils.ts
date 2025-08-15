@@ -4,7 +4,6 @@ import {
   type ThemeKey,
   themeKeys,
   type ThemeOverrides,
-  type TagData,
   type Collation,
 } from '~/types'
 import {
@@ -237,11 +236,11 @@ export async function getAllSeries(
             type: 'series',
             title: frontmatterSeries,
             titleSlug: slugify(frontmatterSeries),
-            posts: [],
+            posts: [post],
           })
         } else {
-          // Ensure the least recent post is first
-          acc[existingSeriesIndex].posts.unshift(post)
+          // Ensure the most recent post is last
+          acc[existingSeriesIndex].posts.push(post)
         }
       }
       return acc
@@ -254,18 +253,33 @@ export async function getAllSeries(
     })
 }
 
-export async function getTagData(posts?: CollectionEntry<'posts'>[]): Promise<TagData> {
+export async function getAllTags(
+  posts?: CollectionEntry<'posts'>[],
+): Promise<Collation[]> {
   const sortedPosts = posts || (await getSortedPosts())
-  return sortedPosts.reduce<TagData>((acc, post) => {
-    const tags = post.data.tags || []
-    tags.forEach((tag) => {
-      if (!acc[tag]) {
-        acc[tag] = []
-      }
-      acc[tag].push(post)
+  return sortedPosts
+    .reduce<Collation[]>((acc, post) => {
+      const frontmatterTags = post.data.tags || []
+      frontmatterTags.forEach((tag) => {
+        const existingTagIndex = acc.findIndex((t) => t.title === tag)
+        if (existingTagIndex === -1) {
+          acc.push({
+            type: 'tag',
+            title: tag,
+            titleSlug: slugify(tag),
+            posts: [post],
+          })
+        } else {
+          // Ensure the most recent post is first
+          acc[existingTagIndex].posts.unshift(post)
+        }
+      })
+      return acc
+    }, [])
+    .sort((a, b) => {
+      // Sort tags by the number of posts in descending order
+      return b.posts.length - a.posts.length
     })
-    return acc
-  }, {})
 }
 
 export function slugify(title: string) {
