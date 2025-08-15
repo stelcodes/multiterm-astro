@@ -4,7 +4,7 @@ import {
   type ThemeKey,
   themeKeys,
   type ThemeOverrides,
-  type SeriesData,
+  type CollationCollection,
   type TagData,
 } from '~/types'
 import {
@@ -225,15 +225,21 @@ export async function getSortedPosts() {
 
 export async function getSeriesData(
   posts?: CollectionEntry<'posts'>[],
-): Promise<SeriesData> {
+): Promise<CollationCollection> {
   const sortedPosts = posts || (await getSortedPosts())
-  return sortedPosts.reduce<SeriesData>((acc, post) => {
+  return sortedPosts.reduce<CollationCollection>((acc, post) => {
     const series = post.data.series
     if (series) {
       if (!acc[series]) {
-        acc[series] = []
+        acc[series] = {
+          type: 'series',
+          title: series,
+          titleSlug: slugify(series),
+          posts: [],
+        }
       }
-      acc[series].push(post)
+      // Ensure the most recent post is first
+      acc[series].posts.unshift(post)
     }
     return acc
   }, {})
@@ -251,4 +257,13 @@ export async function getTagData(posts?: CollectionEntry<'posts'>[]): Promise<Ta
     })
     return acc
   }, {})
+}
+
+export function slugify(title: string) {
+  return title
+    .trim()
+    .replace(/[^A-Za-z0-9 ]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase()
 }

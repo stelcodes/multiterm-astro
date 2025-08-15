@@ -45,7 +45,14 @@ export interface FrontmatterImage {
   }
 }
 
-export type SeriesData = Record<string, CollectionEntry<'posts'>[]>
+export type Collation = {
+  type: 'series' | 'tag'
+  title: string
+  titleSlug: string
+  posts: CollectionEntry<'posts'>[]
+}
+
+export type CollationCollection = Record<string, Collation>
 
 export type TagData = Record<string, CollectionEntry<'posts'>[]>
 

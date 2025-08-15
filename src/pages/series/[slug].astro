@@ -7,22 +7,20 @@ import PostPreview from '~/components/PostPreview.astro'
 
 export const getStaticPaths = (async () => {
   const seriesData = await getSeriesData()
-  return Object.entries(seriesData).map(([series, seriesPosts]) => {
+  return Object.entries(seriesData).map(([_, series]) => {
     return {
-      params: { series },
-      props: { posts: seriesPosts },
+      params: { slug: series.titleSlug },
+      props: { posts: series.posts, title: series.title },
     }
   })
 }) satisfies GetStaticPaths
 
-const { posts } = Astro.props
-const series = Astro.params.series
-const title = `Series: ${series}`
+const { posts, title } = Astro.props
 ---
 
-<Layout title={title} description={`All posts in the ${series} series`}>
+<Layout title={`Series: ${title}`} description={`All posts in the ${title} series`}>
   <div class="mt-2 sm:mt-0">
-    <PageHeader>{series}</PageHeader>
+    <PageHeader>{title}</PageHeader>
     {posts.map((post) => <PostPreview post={post} />)}
   </div>
 </Layout>
