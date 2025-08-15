@@ -20,7 +20,8 @@ const config: SiteConfig = {
   // To change this see src/styles/global.css and import a different font.
   font: 'JetBrains Mono Variable',
   // For pagination, the number of posts to display per page.
-  pageSize: 5,
+  // The homepage will display half this number in the "Latest Posts" section.
+  pageSize: 6,
   // The navigation links to display in the header.
   navLinks: [
     {
