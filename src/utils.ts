@@ -4,13 +4,15 @@ import {
   type ThemeKey,
   themeKeys,
   type ThemeOverrides,
+  type SeriesData,
+  type TagData,
 } from '~/types'
 import {
   loadShikiTheme,
   type BundledShikiTheme,
   type ExpressiveCodeTheme,
 } from 'astro-expressive-code'
-import { getCollection } from 'astro:content'
+import { getCollection, type CollectionEntry } from 'astro:content'
 import Color from 'color'
 
 export function dateString(date: Date) {
@@ -216,33 +218,37 @@ export async function getSortedPosts() {
     return import.meta.env.PROD ? data.draft !== true : true
   })
   const sortedPosts = allPosts.sort((a, b) => {
-    return a.data.published > b.data.published ? -1 : 1
+    return a.data.published < b.data.published ? -1 : 1
   })
   return sortedPosts
 }
 
-export async function getSortedPostsBySeries(series: string) {
-  const sortedPosts = await getSortedPosts()
-  return sortedPosts.filter((p) => series === p.data.series)
+export async function getSeriesData(
+  posts?: CollectionEntry<'posts'>[],
+): Promise<SeriesData> {
+  const sortedPosts = posts || (await getSortedPosts())
+  return sortedPosts.reduce<SeriesData>((acc, post) => {
+    const series = post.data.series
+    if (series) {
+      if (!acc[series]) {
+        acc[series] = []
+      }
+      acc[series].push(post)
+    }
+    return acc
+  }, {})
 }
 
-// type SeriesData = {
-//   [series: string]: CollectionEntry<'posts'>[]
-// }
-
-// export async function getSortedPostsBySeries(
-//   series: string,
-//   posts?: CollectionEntry<'posts'>[],
-// ): SeriesData {
-//   const sortedPosts = posts || (await getSortedPosts())
-//   return sortedPosts.reduce<SeriesData>((acc, post) => {
-//     const series = post.data.series
-//     if (series) {
-//       if (!acc[series]) {
-//         acc[series] = []
-//       }
-//       acc[series].push(post)
-//     }
-//     return acc
-//   }, {})
-// }
+export async function getTagData(posts?: CollectionEntry<'posts'>[]): Promise<TagData> {
+  const sortedPosts = posts || (await getSortedPosts())
+  return sortedPosts.reduce<TagData>((acc, post) => {
+    const tags = post.data.tags || []
+    tags.forEach((tag) => {
+      if (!acc[tag]) {
+        acc[tag] = []
+      }
+      acc[tag].push(post)
+    })
+    return acc
+  }, {})
+}

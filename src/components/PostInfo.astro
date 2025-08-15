@@ -1,5 +1,5 @@
 ---
-import { dateString, getSortedPostsBySeries } from '~/utils'
+import { dateString, getSeriesData } from '~/utils'
 import { render, type CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -14,7 +14,11 @@ const series = post.data.series
 let seriesNumber: number | undefined
 let seriesTotal: number | undefined
 if (series) {
-  const seriesPosts = await getSortedPostsBySeries(series)
+  const seriesData = await getSeriesData()
+  const seriesPosts = seriesData[series]
+  if (!seriesPosts) {
+    throw new Error(`Series "${series}" not found`)
+  }
   seriesNumber = seriesPosts.findIndex((p) => p.id === post.id) + 1
   seriesTotal = seriesPosts.length
 }

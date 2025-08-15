@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import Layout from '~/layouts/Layout.astro'
-import { getSortedPosts } from '~/utils'
+import { getSortedPosts, getTagData } from '~/utils'
 import Pagination from '~/components/Pagination.astro'
 import BlockHeader from '~/components/BlockHeader.astro'
 import siteConfig from '~/site.config'
@@ -9,14 +9,10 @@ import PostPreview from '~/components/PostPreview.astro'
 
 // Note: Pagination like '/', '/2', '/3' only works with spread param like [...page]
 export const getStaticPaths = (async ({ paginate }) => {
-  const sortedPosts = await getSortedPosts()
-  const allTags = new Set(sortedPosts.flatMap((post) => post.data.tags))
-  // flatMap is necessary here to lift paginate lists into top-level list
-  const pages = [...allTags].flatMap((tag) => {
-    const postsWithTag = sortedPosts.filter((post) => {
-      return new Set(post.data.tags).has(tag)
-    })
-    return paginate(postsWithTag, { params: { tag }, pageSize: siteConfig.pageSize })
+  const tagData = await getTagData()
+  const pages = Object.entries(tagData).flatMap(([tag, posts]) => {
+    // Use flatMap to lift the posts for each tag into a single array
+    return paginate(posts, { params: { tag }, pageSize: siteConfig.pageSize })
   })
   return pages
 }) satisfies GetStaticPaths

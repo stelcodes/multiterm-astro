@@ -1,5 +1,6 @@
 import type { MarkdownHeading } from 'astro'
 import type { BundledShikiTheme } from 'astro-expressive-code'
+import type { CollectionEntry } from 'astro:content'
 
 export type WeekdayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 // 0 = Sunday, 1 = Monday etc.
 
@@ -43,6 +44,10 @@ export interface FrontmatterImage {
     format: 'avif' | 'png' | 'webp' | 'jpeg' | 'jpg' | 'svg' | 'tiff' | 'gif'
   }
 }
+
+export type SeriesData = Record<string, CollectionEntry<'posts'>[]>
+
+export type TagData = Record<string, CollectionEntry<'posts'>[]>
 
 export type NavLink = {
   name: string

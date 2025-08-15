@@ -1,24 +1,22 @@
 ---
 import type { CollectionEntry } from 'astro:content'
+import { getTagData } from '~/utils'
 
 interface Props {
   posts: CollectionEntry<'posts'>[]
 }
 
 const { posts } = Astro.props
-const tags = new Set<string>([...posts.flatMap((post) => post.data.tags || [])])
-
-const tagsWithCount = Array.from(tags)
-  .map((tag) => {
-    const count = posts.filter((post) => post.data.tags?.includes(tag)).length
-    return { tag, count }
-  })
-  .sort((a, b) => b.count - a.count)
+const tagsData = await getTagData(posts)
+const sortedTags = Object.entries(tagsData).sort((a, b) => {
+  // Sort tags by the number of posts in descending order
+  return b[1].length - a[1].length
+})
 ---
 
 <ul class="flex flex-wrap gap-x-3 gap-y-4 my-5">
   {
-    tagsWithCount.map(({ tag, count }) => (
+    sortedTags.map(([tag, posts]) => (
       <li>
         <a
           href={`/tags/${encodeURIComponent(tag)}`}
@@ -26,7 +24,7 @@ const tagsWithCount = Array.from(tags)
         >
           {tag}
           <span class="rounded-full bg-foreground/7 text-foreground/90 px-2 py-1 text-xs font-semibold">
-            {count}
+            {posts.length}
           </span>
         </a>
       </li>

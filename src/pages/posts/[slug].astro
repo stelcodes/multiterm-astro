@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import Layout from '~/layouts/Layout.astro'
-import { getSortedPosts } from '~/utils'
+import { getSeriesData, getSortedPosts } from '~/utils'
 import PostPreview from '~/components/PostPreview.astro'
 import DividerText from '~/components/DividerText.astro'
 import { getCollection, render } from 'astro:content'
@@ -13,6 +13,7 @@ import siteConfig from '~/site.config'
 import Tags from '~/components/Tags.astro'
 import PostInfo from '~/components/PostInfo.astro'
 import ScrollUpButton from '~/components/ScrollUpButton.astro'
+import type { CollectionEntry } from 'astro:content'
 
 export const getStaticPaths = (async () => {
   const posts = await getSortedPosts()
@@ -42,12 +43,12 @@ if (addendum.length > 0) {
 }
 
 // Get series posts if this post is part of a series
-let seriesPosts: (typeof post)[] = []
+let seriesPosts: CollectionEntry<'posts'>[] | undefined
 if (postData.series) {
-  const allPosts = await getSortedPosts()
-  seriesPosts = allPosts.filter((p) => postData.series === p.data.series)
+  const seriesData = await getSeriesData()
+  seriesPosts = seriesData[postData.series]
 }
-const showSeries = seriesPosts.length > 1
+const showSeries = seriesPosts && seriesPosts.length > 1
 ---
 
 <Layout
@@ -100,27 +101,29 @@ const showSeries = seriesPosts.length > 1
     )
   }
   {
-    showSeries ? (
-      <>
+    showSeries && seriesPosts ? (
+      <section>
         <DividerText text={`${postData.series} Series`} />
-        {seriesPosts.map((seriesPost) => (
-          <PostPreview post={seriesPost} />
-        ))}
-      </>
+        {seriesPosts
+          .filter((p) => p.id !== post.id) // Exclude the current post
+          .map((seriesPost) => (
+            <PostPreview post={seriesPost} />
+          ))}
+      </section>
     ) : prev || next ? (
-      <>
+      <section>
         <DividerText text="More Posts" />
         {prev && <PostPreview post={prev} />}
         {next && <PostPreview post={next} />}
-      </>
+      </section>
     ) : null
   }
   {
     siteConfig.giscus && (
-      <>
+      <section>
         <DividerText text="Comments" />
         <GiscusLoader />
-      </>
+      </section>
     )
   }
   <ScrollUpButton />
