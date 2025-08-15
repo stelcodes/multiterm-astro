@@ -38,18 +38,18 @@ const postsHaveSeries = sortedPosts.some((post) => post.data.series)
     )
   }
   {
-    postsHaveTags && (
-      <section>
-        <BlockHeader>Tags</BlockHeader>
-        <TagsSection posts={sortedPosts} />
-      </section>
-    )
-  }
-  {
     postsHaveSeries && (
       <section>
         <BlockHeader>Series</BlockHeader>
         <SeriesSection posts={sortedPosts} />
+      </section>
+    )
+  }
+  {
+    postsHaveTags && (
+      <section>
+        <BlockHeader>Tags</BlockHeader>
+        <TagsSection posts={sortedPosts} />
       </section>
     )
   }
