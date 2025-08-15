@@ -10,7 +10,7 @@ import PageHeader from '~/components/PageHeader.astro'
 // Note: Pagination like '/', '/2', '/3' only works with spread param like [...page]
 export const getStaticPaths = (async ({ paginate }) => {
   const tagsGroup = await TagsGroup.build()
-  const pages = tagsGroup.items.flatMap((tags) => {
+  const pages = tagsGroup.collations.flatMap((tags) => {
     // Use flatMap to lift the posts for each tag into a single array
     return paginate(tags.entries.reverse(), {
       params: { tag: tags.key },

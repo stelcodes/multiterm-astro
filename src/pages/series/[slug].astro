@@ -7,7 +7,7 @@ import PostPreview from '~/components/PostPreview.astro'
 
 export const getStaticPaths = (async () => {
   const seriesGroup = await SeriesGroup.build()
-  return seriesGroup.items.map((series) => {
+  return seriesGroup.collations.map((series) => {
     return {
       params: { slug: series.key },
       props: { posts: series.entries, title: series.title },

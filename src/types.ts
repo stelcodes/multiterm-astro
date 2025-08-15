@@ -55,11 +55,11 @@ export interface Collation<CollectionType extends keyof DataEntryMap> {
 export interface CollationGroup<CollectionType extends keyof DataEntryMap> {
   title: string
   url: string
-  items: Collation<CollectionType>[]
-  // Return "this" to allow chaining
-  sortAlpha(): this
-  sortMostRecentEntry(): this
-  sortMostEntries(): this
+  collations: Collation<CollectionType>[]
+  // Return this.collations to allow chaining
+  sortCollationsAlpha(): Collation<CollectionType>[]
+  sortCollationsMostRecent(): Collation<CollectionType>[]
+  sortCollationsLargest(): Collation<CollectionType>[]
   add(item: CollectionEntry<CollectionType>, rawKey: string): void
   match(title: string): Collation<CollectionType> | undefined
   matchMany(titles: string[]): Collation<CollectionType>[] | undefined

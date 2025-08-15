@@ -223,43 +223,43 @@ export async function getSortedPosts() {
   return sortedPosts
 }
 
-abstract class PostsGroup implements CollationGroup<'posts'> {
+abstract class PostsCollationGroup implements CollationGroup<'posts'> {
   title: string
   url: string
-  items: Collation<'posts'>[]
+  collations: Collation<'posts'>[]
 
-  constructor(title: string, url: string, items: Collation<'posts'>[]) {
+  constructor(title: string, url: string, collations: Collation<'posts'>[]) {
     this.title = title
     this.url = url
-    this.items = items
+    this.collations = collations
   }
 
-  sortAlpha(): this {
-    this.items.sort((a, b) => a.title.localeCompare(b.title))
-    return this
+  sortCollationsAlpha(): Collation<'posts'>[] {
+    this.collations.sort((a, b) => a.title.localeCompare(b.title))
+    return this.collations
   }
 
-  sortMostEntries(): this {
-    this.items.sort((a, b) => b.entries.length - a.entries.length)
-    return this
+  sortCollationsLargest(): Collation<'posts'>[] {
+    this.collations.sort((a, b) => b.entries.length - a.entries.length)
+    return this.collations
   }
 
-  sortMostRecentEntry(): this {
-    this.items.sort((a, b) => {
+  sortCollationsMostRecent(): Collation<'posts'>[] {
+    this.collations.sort((a, b) => {
       const aDate = a.entries[a.entries.length - 1].data.published
       const bDate = b.entries[b.entries.length - 1].data.published
       return aDate < bDate ? 1 : -1
     })
-    return this
+    return this.collations
   }
 
   add(item: CollectionEntry<'posts'>, rawKey: string): void {
     const key = slugify(rawKey)
-    const existing = this.items.find((i) => i.key === key)
+    const existing = this.collations.find((i) => i.key === key)
     if (existing) {
       existing.entries.push(item)
     } else {
-      this.items.push({
+      this.collations.push({
         title: rawKey,
         key,
         url: `${this.url}/${key}`,
@@ -270,16 +270,16 @@ abstract class PostsGroup implements CollationGroup<'posts'> {
 
   match(rawKey: string): Collation<'posts'> | undefined {
     const key = slugify(rawKey)
-    return this.items.find((entry) => entry.key === key)
+    return this.collations.find((entry) => entry.key === key)
   }
 
   matchMany(rawKeys: string[]): Collation<'posts'>[] {
     const keys = rawKeys.map(slugify)
-    return this.items.filter((entry) => keys.includes(entry.key))
+    return this.collations.filter((entry) => keys.includes(entry.key))
   }
 }
 
-export class SeriesGroup extends PostsGroup {
+export class SeriesGroup extends PostsCollationGroup {
   // Private constructor to enforce the use of the static build method
   private constructor(title: string, url: string, items: Collation<'posts'>[]) {
     super(title, url, items)
@@ -298,7 +298,7 @@ export class SeriesGroup extends PostsGroup {
   }
 }
 
-export class TagsGroup extends PostsGroup {
+export class TagsGroup extends PostsCollationGroup {
   // Private constructor to enforce the use of the static build method
   private constructor(title: string, url: string, items: Collation<'posts'>[]) {
     super(title, url, items)

@@ -12,7 +12,7 @@ const tagsGroup = await TagsGroup.build(posts)
 
 <ul class="flex flex-wrap gap-x-3 gap-y-4 my-5">
   {
-    tagsGroup.sortMostEntries().items.map((tag) => (
+    tagsGroup.sortCollationsLargest().map((tag) => (
       <li>
         <a
           href={tag.url}

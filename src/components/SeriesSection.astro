@@ -13,7 +13,7 @@ const seriesGroup = await SeriesGroup.build(posts)
 
 <ul class="flex flex-wrap gap-x-3 gap-y-4 my-5">
   {
-    seriesGroup.sortMostRecentEntry().items.map((series) => (
+    seriesGroup.sortCollationsMostRecent().map((series) => (
       <li>
         <a
           href={series.url}
