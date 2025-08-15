@@ -4,8 +4,8 @@ import {
   type ThemeKey,
   themeKeys,
   type ThemeOverrides,
-  type CollationCollection,
   type TagData,
+  type Collation,
 } from '~/types'
 import {
   loadShikiTheme,
@@ -223,26 +223,35 @@ export async function getSortedPosts() {
   return sortedPosts
 }
 
-export async function getSeriesData(
+export async function getAllSeries(
   posts?: CollectionEntry<'posts'>[],
-): Promise<CollationCollection> {
+): Promise<Collation[]> {
   const sortedPosts = posts || (await getSortedPosts())
-  return sortedPosts.reduce<CollationCollection>((acc, post) => {
-    const series = post.data.series
-    if (series) {
-      if (!acc[series]) {
-        acc[series] = {
-          type: 'series',
-          title: series,
-          titleSlug: slugify(series),
-          posts: [],
+  return sortedPosts
+    .reduce<Collation[]>((acc, post) => {
+      const frontmatterSeries = post.data.series
+      if (frontmatterSeries) {
+        const existingSeriesIndex = acc.findIndex((s) => s.title === frontmatterSeries)
+        if (existingSeriesIndex === -1) {
+          acc.push({
+            type: 'series',
+            title: frontmatterSeries,
+            titleSlug: slugify(frontmatterSeries),
+            posts: [],
+          })
+        } else {
+          // Ensure the least recent post is first
+          acc[existingSeriesIndex].posts.unshift(post)
         }
       }
-      // Ensure the most recent post is first
-      acc[series].posts.unshift(post)
-    }
-    return acc
-  }, {})
+      return acc
+    }, [])
+    .sort((a, b) => {
+      // Sort series by date of the most recent post
+      const aDate = a.posts[a.posts.length - 1].data.published
+      const bDate = b.posts[b.posts.length - 1].data.published
+      return aDate < bDate ? 1 : -1
+    })
 }
 
 export async function getTagData(posts?: CollectionEntry<'posts'>[]): Promise<TagData> {

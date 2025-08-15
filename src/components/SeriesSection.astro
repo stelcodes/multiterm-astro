@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
+import { getAllSeries } from '~/utils'
 
 interface Props {
   posts: CollectionEntry<'posts'>[]
@@ -7,25 +8,20 @@ interface Props {
 
 const { posts } = Astro.props
 
-const seriesWithCount = posts.reduce<Record<string, number>>((acc, post) => {
-  if (post.data.series) {
-    acc[post.data.series] = (acc[post.data.series] || 0) + 1
-  }
-  return acc
-}, {})
+const allSeries = await getAllSeries(posts)
 ---
 
 <ul class="flex flex-wrap gap-x-3 gap-y-4 my-5">
   {
-    Object.entries(seriesWithCount).map(([series, count]) => (
+    allSeries.map((series) => (
       <li>
         <a
-          href={`/series/${encodeURIComponent(series)}`}
+          href={`/series/${series.titleSlug}`}
           class="flex items-start gap-2.5 py-2 pl-4 pr-3 bg-accent/7 rounded-3xl border-transparent hover:border-accent/20 border-1 text-foreground/90"
         >
-          {series}
+          {series.title}
           <span class="rounded-full bg-foreground/7 text-foreground/90 px-2 py-1 text-xs font-semibold">
-            {count}
+            {series.posts.length}
           </span>
         </a>
       </li>
