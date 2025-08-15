@@ -3,9 +3,9 @@ import type { GetStaticPaths } from 'astro'
 import Layout from '~/layouts/Layout.astro'
 import { getTagData } from '~/utils'
 import Pagination from '~/components/Pagination.astro'
-import BlockHeader from '~/components/BlockHeader.astro'
 import siteConfig from '~/site.config'
 import PostPreview from '~/components/PostPreview.astro'
+import PageHeader from '~/components/PageHeader.astro'
 
 // Note: Pagination like '/', '/2', '/3' only works with spread param like [...page]
 export const getStaticPaths = (async ({ paginate }) => {
@@ -24,7 +24,7 @@ const title = `Tag: ${tag}`
 
 <Layout title={title} description={`All posts tagged with ${tag}`}>
   <div class="mt-2 sm:mt-0">
-    <BlockHeader>{title}</BlockHeader>
+    <PageHeader>{tag}</PageHeader>
     {page.data.map((post) => <PostPreview post={post} />)}
     <Pagination
       prevLink={page.url.prev ? encodeURI(page.url.prev) : undefined}
