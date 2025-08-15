@@ -1,5 +1,5 @@
 ---
-import { dateString, getAllSeries } from '~/utils'
+import { dateString, SeriesGroup } from '~/utils'
 import { render, type CollectionEntry } from 'astro:content'
 import type { Collation } from '~/types'
 
@@ -12,18 +12,18 @@ const { post, class: className } = Astro.props
 const { remarkPluginFrontmatter } = await render(post)
 const { minutesRead } = remarkPluginFrontmatter
 const seriesFrontmatter = post.data.series
-let series: Collation | undefined
+let series: Collation<'posts'> | undefined
 let seriesPostNumber: number | undefined
 let seriesTotal: number | undefined
 if (seriesFrontmatter) {
-  const allSeries = await getAllSeries()
-  series = allSeries.find((s) => s.title === seriesFrontmatter)
+  const seriesGroup = await SeriesGroup.build()
+  series = seriesGroup.match(seriesFrontmatter)
   if (!series) {
     // This should never happen if the series data is correct
     throw new Error(`Series "${seriesFrontmatter}" not found`)
   }
-  seriesPostNumber = series.posts.findIndex((p) => p.id === post.id) + 1
-  seriesTotal = series.posts.length
+  seriesPostNumber = series.entries.findIndex((p) => p.id === post.id) + 1
+  seriesTotal = series.entries.length
 }
 ---
 
@@ -35,7 +35,7 @@ if (seriesFrontmatter) {
       series && seriesPostNumber && seriesTotal && (
         <a
           class="shrink-0 rounded-2xl py-[3px] px-3.5 bg-foreground/1 me-2.5 hover:bg-foreground/5 transition-colors border-1 border-foreground/16 hover:border-foreground/20"
-          href={`/series/${series.titleSlug}`}
+          href={series.url}
         >
           {series.title} {seriesPostNumber} / {seriesTotal}
         </a>

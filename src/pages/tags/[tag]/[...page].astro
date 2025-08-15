@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import Layout from '~/layouts/Layout.astro'
-import { getAllTags } from '~/utils'
+import { TagsGroup } from '~/utils'
 import Pagination from '~/components/Pagination.astro'
 import siteConfig from '~/site.config'
 import PostPreview from '~/components/PostPreview.astro'
@@ -9,10 +9,13 @@ import PageHeader from '~/components/PageHeader.astro'
 
 // Note: Pagination like '/', '/2', '/3' only works with spread param like [...page]
 export const getStaticPaths = (async ({ paginate }) => {
-  const allTags = await getAllTags()
-  const pages = allTags.flatMap((tagCollation) => {
+  const tagsGroup = await TagsGroup.build()
+  const pages = tagsGroup.items.flatMap((tags) => {
     // Use flatMap to lift the posts for each tag into a single array
-    return paginate(tagCollation.posts, { params: { tag: tagCollation.titleSlug }, pageSize: siteConfig.pageSize })
+    return paginate(tags.entries.reverse(), {
+      params: { tag: tags.key },
+      pageSize: siteConfig.pageSize,
+    })
   })
   return pages
 }) satisfies GetStaticPaths

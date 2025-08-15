@@ -1,6 +1,6 @@
 import type { MarkdownHeading } from 'astro'
 import type { BundledShikiTheme } from 'astro-expressive-code'
-import type { CollectionEntry } from 'astro:content'
+import type { CollectionEntry, DataEntryMap } from 'astro:content'
 
 export type WeekdayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 // 0 = Sunday, 1 = Monday etc.
 
@@ -45,11 +45,24 @@ export interface FrontmatterImage {
   }
 }
 
-export type Collation = {
-  type: 'series' | 'tag'
+export interface Collation<CollectionType extends keyof DataEntryMap> {
   title: string
-  titleSlug: string
-  posts: CollectionEntry<'posts'>[]
+  url: string
+  key: string
+  entries: CollectionEntry<CollectionType>[]
+}
+
+export interface CollationGroup<CollectionType extends keyof DataEntryMap> {
+  title: string
+  url: string
+  items: Collation<CollectionType>[]
+  // Return "this" to allow chaining
+  sortAlpha(): this
+  sortMostRecentEntry(): this
+  sortMostEntries(): this
+  add(item: CollectionEntry<CollectionType>, rawKey: string): void
+  match(title: string): Collation<CollectionType> | undefined
+  matchMany(titles: string[]): Collation<CollectionType>[] | undefined
 }
 
 export type NavLink = {

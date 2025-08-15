@@ -1,16 +1,16 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import Layout from '~/layouts/Layout.astro'
-import { getAllSeries } from '~/utils'
+import { SeriesGroup } from '~/utils'
 import PageHeader from '~/components/PageHeader.astro'
 import PostPreview from '~/components/PostPreview.astro'
 
 export const getStaticPaths = (async () => {
-  const allSeries = await getAllSeries()
-  return allSeries.map((series) => {
+  const seriesGroup = await SeriesGroup.build()
+  return seriesGroup.items.map((series) => {
     return {
-      params: { slug: series.titleSlug },
-      props: { posts: series.posts, title: series.title },
+      params: { slug: series.key },
+      props: { posts: series.entries, title: series.title },
     }
   })
 }) satisfies GetStaticPaths

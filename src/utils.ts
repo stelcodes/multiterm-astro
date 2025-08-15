@@ -5,6 +5,7 @@ import {
   themeKeys,
   type ThemeOverrides,
   type Collation,
+  type CollationGroup,
 } from '~/types'
 import {
   loadShikiTheme,
@@ -222,64 +223,99 @@ export async function getSortedPosts() {
   return sortedPosts
 }
 
-export async function getAllSeries(
-  posts?: CollectionEntry<'posts'>[],
-): Promise<Collation[]> {
-  const sortedPosts = posts || (await getSortedPosts())
-  return sortedPosts
-    .reduce<Collation[]>((acc, post) => {
-      const frontmatterSeries = post.data.series
-      if (frontmatterSeries) {
-        const existingSeriesIndex = acc.findIndex((s) => s.title === frontmatterSeries)
-        if (existingSeriesIndex === -1) {
-          acc.push({
-            type: 'series',
-            title: frontmatterSeries,
-            titleSlug: slugify(frontmatterSeries),
-            posts: [post],
-          })
-        } else {
-          // Ensure the most recent post is last
-          acc[existingSeriesIndex].posts.push(post)
-        }
-      }
-      return acc
-    }, [])
-    .sort((a, b) => {
-      // Sort series by date of the most recent post
-      const aDate = a.posts[a.posts.length - 1].data.published
-      const bDate = b.posts[b.posts.length - 1].data.published
+abstract class PostsGroup implements CollationGroup<'posts'> {
+  title: string
+  url: string
+  items: Collation<'posts'>[]
+
+  constructor(title: string, url: string, items: Collation<'posts'>[]) {
+    this.title = title
+    this.url = url
+    this.items = items
+  }
+
+  sortAlpha(): this {
+    this.items.sort((a, b) => a.title.localeCompare(b.title))
+    return this
+  }
+
+  sortMostEntries(): this {
+    this.items.sort((a, b) => b.entries.length - a.entries.length)
+    return this
+  }
+
+  sortMostRecentEntry(): this {
+    this.items.sort((a, b) => {
+      const aDate = a.entries[a.entries.length - 1].data.published
+      const bDate = b.entries[b.entries.length - 1].data.published
       return aDate < bDate ? 1 : -1
     })
+    return this
+  }
+
+  add(item: CollectionEntry<'posts'>, rawKey: string): void {
+    const key = slugify(rawKey)
+    const existing = this.items.find((i) => i.key === key)
+    if (existing) {
+      existing.entries.push(item)
+    } else {
+      this.items.push({
+        title: rawKey,
+        key,
+        url: `${this.url}/${key}`,
+        entries: [item],
+      })
+    }
+  }
+
+  match(rawKey: string): Collation<'posts'> | undefined {
+    const key = slugify(rawKey)
+    return this.items.find((entry) => entry.key === key)
+  }
+
+  matchMany(rawKeys: string[]): Collation<'posts'>[] {
+    const keys = rawKeys.map(slugify)
+    return this.items.filter((entry) => keys.includes(entry.key))
+  }
 }
 
-export async function getAllTags(
-  posts?: CollectionEntry<'posts'>[],
-): Promise<Collation[]> {
-  const sortedPosts = posts || (await getSortedPosts())
-  return sortedPosts
-    .reduce<Collation[]>((acc, post) => {
+export class SeriesGroup extends PostsGroup {
+  // Private constructor to enforce the use of the static build method
+  private constructor(title: string, url: string, items: Collation<'posts'>[]) {
+    super(title, url, items)
+  }
+  // Factory method to create a SeriesGroup instance with async data fetching
+  static async build(posts?: CollectionEntry<'posts'>[]): Promise<SeriesGroup> {
+    const sortedPosts = posts || (await getSortedPosts())
+    const seriesGroup = new SeriesGroup('Series', '/series', [])
+    sortedPosts.forEach((post) => {
+      const frontmatterSeries = post.data.series
+      if (frontmatterSeries) {
+        seriesGroup.add(post, frontmatterSeries)
+      }
+    })
+    return seriesGroup
+  }
+}
+
+export class TagsGroup extends PostsGroup {
+  // Private constructor to enforce the use of the static build method
+  private constructor(title: string, url: string, items: Collation<'posts'>[]) {
+    super(title, url, items)
+  }
+
+  // Factory method to create a SeriesGroup instance with async data fetching
+  static async build(posts?: CollectionEntry<'posts'>[]): Promise<SeriesGroup> {
+    const sortedPosts = posts || (await getSortedPosts())
+    const tagsGroup = new TagsGroup('Tags', '/tags', [])
+    sortedPosts.forEach((post) => {
       const frontmatterTags = post.data.tags || []
       frontmatterTags.forEach((tag) => {
-        const existingTagIndex = acc.findIndex((t) => t.title === tag)
-        if (existingTagIndex === -1) {
-          acc.push({
-            type: 'tag',
-            title: tag,
-            titleSlug: slugify(tag),
-            posts: [post],
-          })
-        } else {
-          // Ensure the most recent post is first
-          acc[existingTagIndex].posts.unshift(post)
-        }
+        tagsGroup.add(post, tag)
       })
-      return acc
-    }, [])
-    .sort((a, b) => {
-      // Sort tags by the number of posts in descending order
-      return b.posts.length - a.posts.length
     })
+    return tagsGroup
+  }
 }
 
 export function slugify(title: string) {

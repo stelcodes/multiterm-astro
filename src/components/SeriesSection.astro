@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
-import { getAllSeries } from '~/utils'
+import { SeriesGroup } from '~/utils'
 
 interface Props {
   posts: CollectionEntry<'posts'>[]
@@ -8,20 +8,20 @@ interface Props {
 
 const { posts } = Astro.props
 
-const allSeries = await getAllSeries(posts)
+const seriesGroup = await SeriesGroup.build(posts)
 ---
 
 <ul class="flex flex-wrap gap-x-3 gap-y-4 my-5">
   {
-    allSeries.map((series) => (
+    seriesGroup.sortMostRecentEntry().items.map((series) => (
       <li>
         <a
-          href={`/series/${series.titleSlug}`}
+          href={series.url}
           class="flex items-start gap-2.5 py-2 pl-4 pr-3 bg-accent/7 rounded-3xl border-transparent hover:border-accent/20 border-1 text-foreground/90"
         >
           {series.title}
           <span class="rounded-full bg-foreground/7 text-foreground/90 px-2 py-1 text-xs font-semibold">
-            {series.posts.length}
+            {series.entries.length}
           </span>
         </a>
       </li>

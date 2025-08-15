@@ -2,7 +2,7 @@
 import type { Collation } from '~/types'
 
 interface Props {
-  tags: Collation[]
+  tags: Collation<'posts'>[]
 }
 
 const { tags } = Astro.props
@@ -12,7 +12,7 @@ const { tags } = Astro.props
   {
     tags.map((tag) => (
       <a
-        href={`/tags/${tag.titleSlug}`}
+        href={tag.url}
         class="py-1 px-3 bg-accent/1 hover:bg-accent/8 border-1 border-accent/20 text-accent/90 rounded-2xl transition-colors"
       >
         {tag.title}

@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import Layout from '~/layouts/Layout.astro'
-import { getAllSeries, getAllTags, getSortedPosts } from '~/utils'
+import { SeriesGroup, TagsGroup, getSortedPosts } from '~/utils'
 import PostPreview from '~/components/PostPreview.astro'
 import DividerText from '~/components/DividerText.astro'
 import { getCollection, render } from 'astro:content'
@@ -45,17 +45,17 @@ if (addendum.length > 0) {
 const sortedPosts = await getSortedPosts()
 
 // Get series posts if this post is part of a series
-let series: Collation | undefined
+let series: Collation<'posts'> | undefined
 if (postData.series) {
-  const allSeries = await getAllSeries(sortedPosts)
-  series = allSeries.find((s) => s.title === postData.series)
+  const seriesGroup = await SeriesGroup.build(sortedPosts)
+  series = seriesGroup.match(postData.series)
 }
-const showSeries = series && series.posts.length > 1
+const showSeries = series && series.entries.length > 1
 
-let tags: Collation[] | undefined
+let tags: Collation<'posts'>[] | undefined
 if (postData.tags && postData.tags.length > 0) {
-  const allTags = await getAllTags(sortedPosts)
-  tags = allTags.filter((tag) => postData.tags.includes(tag.title))
+  const tagsGroup = await TagsGroup.build(sortedPosts)
+  tags = tagsGroup.matchMany(postData.tags)
 }
 ---
 
@@ -112,7 +112,7 @@ if (postData.tags && postData.tags.length > 0) {
     showSeries && series ? (
       <section>
         <DividerText text={`${series.title} Series`} />
-        {series.posts
+        {series.entries
           .filter((p) => p.id !== post.id) // Exclude the current post
           .map((seriesPost) => (
             <PostPreview post={seriesPost} />
