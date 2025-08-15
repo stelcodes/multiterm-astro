@@ -27,7 +27,7 @@ const title = `Tag: ${tag}`
 
 <Layout title={title} description={`All posts tagged with ${tag}`}>
   <div class="mt-2 sm:mt-0">
-    <PageHeader>{tag}</PageHeader>
+    <PageHeader />
     {page.data.map((post) => <PostPreview post={post} />)}
     <Pagination
       prevLink={page.url.prev ? encodeURI(page.url.prev) : undefined}

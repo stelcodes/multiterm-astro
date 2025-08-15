@@ -20,7 +20,7 @@ const { posts, title } = Astro.props
 
 <Layout title={`Series: ${title}`} description={`All posts in the ${title} series`}>
   <div class="mt-2 sm:mt-0">
-    <PageHeader>{title}</PageHeader>
+    <PageHeader />
     {posts.map((post) => <PostPreview post={post} />)}
   </div>
 </Layout>

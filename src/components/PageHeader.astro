@@ -1,5 +1,23 @@
-<div class="border-0 border-accent/30 bg-accent/6 rounded-xl inline-block py-2.5 pl-3 pr-6 mt-4 md:mt-7">
+---
+interface Props {
+  title?: string
+}
+
+const { title } = Astro.props
+
+const splitPath: string[] = Astro.url.pathname.split('/').filter(Boolean) // Remove empty parts
+
+if (splitPath.length === 0) {
+  splitPath.push('Home')
+}
+
+const finalTitle = title ? `// ${title}` : `/ ${splitPath.join(' / ')}`
+---
+
+<div
+  class="border-0 border-accent/30 bg-accent/6 rounded-xl inline-block py-2.5 pl-3 pr-4 mt-5 md:mt-8"
+>
   <h1 class="text-accent text-2xl font-semibold">
-    // <slot />
+    {finalTitle}
   </h1>
 </div>
