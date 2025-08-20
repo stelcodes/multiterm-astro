@@ -156,6 +156,48 @@ export type SocialLinks = {
   rss?: boolean
 }
 
+export type CommandPaletteAction =
+  | {
+      type: 'link'
+      position: 'front' | 'end'
+      name: string
+      icon?: string
+      link: string
+      external: boolean
+      fn?: never
+      params?: never
+      actions?: never
+    }
+  | {
+      type: 'action'
+      position: 'front' | 'end'
+      name: string
+      icon?: string | any
+      link?: never
+      external?: never
+      fn: string
+      params?: any
+      actions?: never
+    }
+  | {
+      type: 'page'
+      position: 'front' | 'end'
+      name: string
+      icon?: string | any
+      link?: never
+      external?: never
+      fn?: never
+      params?: never
+      actions: CommandPaletteAction[]
+    }
+
+export type CommandPaletteConfig = {
+  enabled: boolean
+  useSocialLinks: boolean
+  useThemes: boolean
+  customActions: CommandPaletteAction[]
+}
+
 export type GiscusConfig = {
   repo: string
   repoId: string
@@ -176,6 +218,7 @@ export interface SiteConfig {
   trailingSlashes: boolean
   themes: ThemesConfig
   socialLinks: SocialLinks
+  commandPalette: CommandPaletteConfig
   navLinks: NavLink[]
   giscus: GiscusConfig | undefined
 }
