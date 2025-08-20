@@ -337,6 +337,7 @@ const { socialLinks, themes, actions, trailingSlashes = false } = Astro.props
 
           const action = {
             type: 'link',
+            position: 'front',
             name,
             icon,
             link: value,
@@ -372,6 +373,7 @@ const { socialLinks, themes, actions, trailingSlashes = false } = Astro.props
 
       const themeSelectAction = {
         type: 'page',
+        position: 'end',
         name: 'Select Theme',
         icon: IconPalette,
         actions: themeChangeActions,
