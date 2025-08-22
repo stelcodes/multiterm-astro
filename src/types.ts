@@ -220,5 +220,6 @@ export interface SiteConfig {
   socialLinks: SocialLinks
   commandPalette: CommandPaletteConfig
   navLinks: NavLink[]
-  giscus: GiscusConfig | undefined
+  giscus: GiscusConfig | undefined,
+  characters: Record<string, string>
 }

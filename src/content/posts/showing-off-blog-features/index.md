@@ -120,6 +120,48 @@ testing123
 testing123
 :::
 
+## Character Chats
+
+```md title="Custom character chat" wrap
+:::duck
+**Did you know?** You can easily create custom character chats for your blog with MultiTerm!
+:::
+```
+
+:::duck
+**Did you know?** You can easily create custom character chats for your blog with MultiTerm!
+:::
+
+### Adding Your Own
+
+To add your own character, first add an image file to the top-level `/public` directory in your cloned MultiTerm repo. Astro cannot automatically optimize image assets from markdown plugins, so make sure to compress the image to a web-friendly size (<100kb).
+
+I recommend Google's free [Squoosh](https://squoosh.app) web app for creating super small webp files. The characters here have been resized to 300 pixels wide and exported to webp with 75% quality using Squoosh.
+
+After you've added your image, update the `characters` option in `site.config.ts` with your newly added image file and restart the development server.
+
+### Character Conversations
+
+When there are multiple character chats in a row, the order of the chat image and chat bubble reverses to give the chat more of a back-and-forth appearance.
+
+```md title="Sequential character chats"
+:::owl
+This is a cool feature!
+:::
+
+:::unicorn
+I agree!
+:::
+```
+
+:::owl
+This is a cool feature!
+:::
+
+:::unicorn
+I agree!
+:::
+
 ## GitHub Cards
 
 GitHub overview cards heavily inspired by [Astro Cactus](https://github.com/chrismwilliams/astro-theme-cactus).
@@ -130,7 +172,7 @@ GitHub overview cards heavily inspired by [Astro Cactus](https://github.com/chri
 
 ::github{repo="stelcodes/multiterm-astro"}
 
-```md title="GitHub user card example in markdown"
+```md wrap=true title="GitHub user card example in markdown"
 ::github{user="withastro"}
 ```
 

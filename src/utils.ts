@@ -326,3 +326,13 @@ export function slugify(title: string) {
     .replace(/^-+|-+$/g, '')
     .toLowerCase()
 }
+
+export function getPostSequenceContext(
+  post: CollectionEntry<'posts'>,
+  posts: CollectionEntry<'posts'>[],
+) {
+  const index = posts.findIndex((p) => p.id === post.id)
+  const prev = index > 0 ? posts[index - 1] : undefined
+  const next = index < posts.length - 1 ? posts[index + 1] : undefined
+  return { index, prev, next }
+}

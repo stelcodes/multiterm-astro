@@ -14,9 +14,10 @@ export const getStaticPaths = (async ({ paginate }) => {
 }) satisfies GetStaticPaths
 
 const { page } = Astro.props
+const pageTitle = 'Archive' + (page.currentPage > 1 ? ` - Page ${page.currentPage}` : '')
 ---
 
-<Layout title="Archive" description="All posts in the archive">
+<Layout title={pageTitle} description="All posts in the archive">
   <div class="mt-2 sm:mt-0">
     <PageHeader />
     {page.data.map((post) => <PostPreview post={post} />)}

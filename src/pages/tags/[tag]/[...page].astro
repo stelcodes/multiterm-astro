@@ -22,10 +22,11 @@ export const getStaticPaths = (async ({ paginate }) => {
 
 const { page } = Astro.props
 const { tag } = Astro.params
-const title = `Tag: ${tag}`
+const pageTitle =
+  `Tag: ${tag}` + (page.currentPage > 1 ? ` - Page ${page.currentPage}` : '')
 ---
 
-<Layout title={title} description={`All posts tagged with ${tag}`}>
+<Layout title={pageTitle} description={`All posts tagged with ${tag}`}>
   <div class="mt-2 sm:mt-0">
     <PageHeader />
     {page.data.map((post) => <PostPreview post={post} />)}

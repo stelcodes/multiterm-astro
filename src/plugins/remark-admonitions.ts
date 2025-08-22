@@ -1,23 +1,10 @@
-import type { Parent, PhrasingContent, Root } from 'mdast'
-import type { LeafDirective, TextDirective } from 'mdast-util-directive'
-import { directiveToMarkdown } from 'mdast-util-directive'
-import { toMarkdown } from 'mdast-util-to-markdown'
+import type { PhrasingContent, Root } from 'mdast'
 import { toString as mdastToString } from 'mdast-util-to-string'
 import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
 import type { AdmonitionType } from '~/types'
 import { h as _h, type Properties } from 'hastscript'
-import type { Node, Paragraph as P } from 'mdast'
-import type { Directives } from 'mdast-util-directive'
-
-/** Checks if a node is a directive. */
-function isNodeDirective(node: Node): node is Directives {
-  return (
-    node.type === 'containerDirective' ||
-    node.type === 'leafDirective' ||
-    node.type === 'textDirective'
-  )
-}
+import type { Paragraph as P } from 'mdast'
 
 /** From Astro Starlight: Function that generates an mdast HTML tree ready for conversion to HTML by rehype. */
 function h(el: string, attrs: Properties = {}, children: any[] = []): P {
@@ -43,36 +30,9 @@ function isAdmonition(s: string): s is AdmonitionType {
   return Admonitions.has(s as AdmonitionType)
 }
 
-/**
- * From Astro Starlight:
- * Transforms directives not supported back to original form as it can break user content and result in 'broken' output.
- */
-function transformUnhandledDirective(
-  node: LeafDirective | TextDirective,
-  index: number,
-  parent: Parent,
-) {
-  const textNode = {
-    type: 'text',
-    value: toMarkdown(node, { extensions: [directiveToMarkdown()] }),
-  } as const
-  if (node.type === 'textDirective') {
-    parent.children[index] = textNode
-  } else {
-    parent.children[index] = {
-      children: [textNode],
-      type: 'paragraph',
-    }
-  }
-}
-
 export const remarkAdmonitions: Plugin<[], Root> = () => (tree) => {
   visit(tree, (node, index, parent) => {
-    if (!parent || index === undefined || !isNodeDirective(node)) return
-    if (node.type === 'textDirective' || node.type === 'leafDirective') {
-      transformUnhandledDirective(node, index, parent)
-      return
-    }
+    if (!parent || index === undefined || node.type !== 'containerDirective') return
 
     const admonitionType = node.name
     if (!isAdmonition(admonitionType)) return

@@ -116,7 +116,7 @@ article img {
   @apply text-base/7;
 
   code:not(.expressive-code code) {
-    @apply text-sm font-mono text-foreground/90 bg-foreground/5 px-2.5 py-1 rounded-lg;
+    @apply text-sm font-mono text-foreground/90 bg-foreground/5 px-2.5 py-1 rounded-lg whitespace-nowrap;
   }
 
   & > *:not(div.expressive-code, img, figure, video, hr, blockquote, aside),
@@ -134,6 +134,7 @@ article img {
     }
 
     div.copy button {
+      @apply hidden sm:flex;
       --code-background: var(--theme-background);
     }
 
@@ -339,11 +340,11 @@ article img {
   }
 
   li {
-    @apply pl-2 my-4 marker:text-list marker:-left-5;
+    @apply pl-2 my-4 marker:text-list;
   }
 
   ul li {
-    @apply marker:content-['-'];
+    list-style-type: "-";
   }
 
   ol li {
@@ -377,7 +378,38 @@ article img {
   }
 
   aside {
-    @apply bg-foreground/8;
+    @apply bg-foreground/7;
+
+    &.character-dialogue {
+      @apply sm:bg-transparent flex sm:items-start items-center justify-center gap-3 sm:flex-row px-2 md:px-5;
+
+      & + aside.character-dialogue {
+        @apply sm:pt-1 -mt-2 sm:-mt-7;
+
+        &:nth-of-type(even) {
+          @apply flex-row-reverse;
+
+          .character-dialogue-content:after {
+            @apply -right-3 -rotate-90;
+            left: initial;
+          }
+        }
+      }
+
+      img.character-dialogue-image {
+        @apply m-0 border-none shrink-1 w-20 sm:w-25;
+      }
+
+      .character-dialogue-content {
+        @apply relative shrink-5 sm:bg-foreground/6 px-1 mx-1.5 sm:px-6 rounded-xl sm:py-6 max-w-full sm:min-w-1/8;
+
+        /* Add pointy part of speech bubble to the bottom left corner */
+        &:after {
+          @apply hidden sm:block absolute top-8 -left-3 rotate-90 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-foreground/6;
+          content: '';
+        }
+      }
+    }
 
     p.admonition-title {
       @apply mb-2 inline-block font-semibold relative ml-6.5 md:ml-8.5;

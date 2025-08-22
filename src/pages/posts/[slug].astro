@@ -15,14 +15,13 @@ import PostInfo from '~/components/PostInfo.astro'
 import ScrollUpButton from '~/components/ScrollUpButton.astro'
 import type { Collation } from '~/types'
 import ChevronsRight from '~/icons/chevrons-right.svg'
+import { getPostSequenceContext } from '~/utils'
 
 export const getStaticPaths = (async () => {
   const posts = await getSortedPosts()
-  return posts.map((post, index) => {
-    const validPrev = index > 0
-    const validNext = index < posts.length - 1
-    const prev = validPrev ? posts[index - 1] : undefined
-    const next = validNext ? posts[index + 1] : undefined
+  return posts.map((post) => {
+    // Get sequence context for the post
+    const { prev, next } = getPostSequenceContext(post, posts)
     return {
       params: { slug: post.id },
       props: { post, prev, next },
@@ -55,10 +54,8 @@ if (postData.series) {
     // This should not happen if series data is correct
     throw new Error(`Series "${postData.series}" not found`)
   }
-  const index = series.entries.findIndex((entry) => entry.id === post.id)
-  if (index >= 0 && index <= series.entries.length - 2) {
-    nextPostInSeries = series.entries[index + 1]
-  }
+  const sequenceContext = getPostSequenceContext(post, series.entries)
+  nextPostInSeries = sequenceContext.next
 }
 const showSeries = series && series.entries.length > 1
 
@@ -88,7 +85,7 @@ if (postData.tags && postData.tags.length > 0) {
       )
     }
     <div class="md:mx-2">
-      <h1 class="mb-4 text-[1.75rem] text-heading1 font-semibold">
+      <h1 id={post.id} class="mb-4 text-[1.75rem] text-heading1 font-semibold">
         # {postData.title}
       </h1>
       <div class="my-2 border-l-2 border-accent/80 pl-4 py-2">
@@ -132,11 +129,9 @@ if (postData.tags && postData.tags.length > 0) {
     showSeries && series ? (
       <section>
         <DividerText text={`${series.title} Series`} />
-        {series.entries
-          .filter((p) => p.id !== post.id) // Exclude the current post
-          .map((seriesPost) => (
-            <PostPreview post={seriesPost} />
-          ))}
+        {series.entries.map((seriesPost) => (
+          <PostPreview post={seriesPost} />
+        ))}
       </section>
     ) : prev || next ? (
       <section>
