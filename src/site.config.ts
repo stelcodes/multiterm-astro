@@ -1,4 +1,15 @@
 import type { SiteConfig } from '~/types'
+import fs from 'fs'
+import path from 'path'
+
+// Function to read SVG files as raw strings similar to Astros ?raw functionality
+function readSvgAsString(svgPath: string): string {
+  const fullPath = path.resolve(process.cwd(), 'src', svgPath)
+  return fs.readFileSync(fullPath, 'utf-8')
+}
+
+const IconHome = readSvgAsString('icons/home.svg')
+const IconUser = readSvgAsString('icons/user.svg')
 
 const config: SiteConfig = {
   // Absolute URL to the root of your published site, used for generating links and sitemaps.
@@ -153,11 +164,43 @@ const config: SiteConfig = {
   socialLinks: {
     github: 'https://github.com/stelcodes/multiterm-astro',
     mastodon: 'https://github.com/stelcodes/multiterm-astro',
-    email: 'https://github.com/stelcodes/multiterm-astro',
     linkedin: 'https://github.com/stelcodes/multiterm-astro',
     bluesky: 'https://github.com/stelcodes/multiterm-astro',
     twitter: 'https://github.com/stelcodes/multiterm-astro',
+    email: 'https://github.com/stelcodes/multiterm-astro',
     rss: true, // Set to true to include an RSS feed link in the footer
+  },
+  // Command Palette Configuration.
+  // Import SVG icons at the top of this file to use them in your custom actions
+  // Define your custom action functions in the CommandPalette.astro file (reference the exampleAction)
+  commandPalette: {
+    enabled: true,
+    useSocialLinks: true,
+    useThemes: true,
+    customActions: [
+      {
+        type: 'link',
+        position: 'front',
+        name: 'Home Page',
+        icon: IconHome,
+        link: '/',
+        external: false,
+      },
+      {
+        type: 'link',
+        position: 'front',
+        name: 'About Page',
+        icon: IconUser,
+        link: '/about',
+        external: false,
+      },
+      {
+        type: 'action',
+        position: 'end',
+        name: 'Example Action',
+        fn: 'exampleAction',
+      },
+    ],
   },
   // Configuration for Giscus comments.
   // To set up Giscus, follow the instructions at https://giscus.app/

@@ -1,0 +1,544 @@
+---
+import '@pagefind/default-ui/css/ui.css'
+import IconCircleX from '~/icons/circle-x.svg'
+import IconCommand from '~/icons/command.svg'
+
+const { socialLinks, themes, actions, trailingSlashes = false } = Astro.props
+---
+
+<command-palette
+  class="ms-auto"
+  id="command-palette"
+  data-trailing-slashes={trailingSlashes}
+>
+  <button
+    class="hover:text-accent flex cursor-pointer items-center justify-center rounded-md"
+    aria-keyshortcuts="Control+K Meta+K"
+    data-open-modal
+    disabled
+  >
+    <IconCommand class="size-6 text-accent" />
+    <span class="sr-only">Open Command Palette</span>
+  </button>
+  <dialog
+    aria-label="command-palette"
+    class="text-foreground! bg-background max-h-5/6 min-h-48 w-7/8 sm:w-5/6 max-w-xl border-double! border-4 border-accent/30 shadow-sm backdrop:backdrop-blur-sm open:flex mx-auto mt-10 sm:mt-16 mb-auto rounded-xl"
+  >
+    <div class="dialog-frame flex grow flex-col gap-4 p-6 pt-6 max-w-full">
+      <button class="cursor-pointer fixed top-2 right-2 rounded-full" data-close-modal>
+        <IconCircleX class="size-6 text-accent/50" />
+      </button>
+
+      <div class="search-section">
+        <h3 class="text-lg font-semibold mb-3 text-accent">Search Posts</h3>
+        {
+          import.meta.env.DEV ? (
+            <div class="mx-auto text-center">
+              <p>
+                Search is only available in production builds. <br />
+                Try building and previewing the site to test it out locally.
+              </p>
+            </div>
+          ) : (
+            <div class="search-container">
+              <div id="pagefind-search-palette" class="max-w-full" />
+            </div>
+          )
+        }
+      </div>
+
+      {
+        actions && actions.length > 0 && (
+          <>
+            <hr class="text-accent" />
+            <div class="actions-section pb-3">
+              <h3 id="actions-title" class="text-lg font-semibold mb-3 text-accent">
+                Quick Actions
+              </h3>
+              <div id="actions-container" class="grid gap-2" />
+            </div>
+          </>
+        )
+      }
+    </div>
+  </dialog>
+</command-palette>
+
+<style is:global>
+  :root {
+    --pagefind-ui-font: inherit;
+    --pagefind-ui-primary: var(--theme-accent);
+    --pagefind-ui-text: var(--theme-foreground);
+    --pagefind-ui-background: var(--theme-background);
+    --pagefind-ui-border: var(--theme-accent);
+    --pagefind-ui-border-width: 2px;
+  }
+
+  .pagefind-ui__results-area {
+    margin: 16px 0;
+  }
+  .pagefind-ui__result {
+    overflow-x: scroll !important;
+  }
+
+  .pagefind-ui__result-inner {
+    max-width: 100% !important;
+  }
+
+  .pagefind-ui__result-inner mark {
+    background-color: var(--theme-accent) !important;
+    color: var(--theme-background) !important;
+    font-weight: 600 !important;
+    padding: 0 3px !important;
+    border-radius: 6px !important;
+  }
+
+  .pagefind-ui__result-nested .pagefind-ui__result-link:before {
+    content: '>' !important;
+    left: -16px !important;
+    right: unset !important;
+    color: var(--theme-accent) !important;
+    font-weight: 600 !important;
+  }
+</style>
+
+<script define:vars={{ actions, themes, socialLinks }}>
+  window.commandPaletteActions = actions
+  window.commandPaletteThemes = themes
+  window.commandPaletteSocials = socialLinks
+</script>
+
+<script>
+  import IconExternalLink from '~/icons/external-link.svg?raw'
+  import IconArrowRight from '~/icons/arrow-right.svg?raw'
+  import IconArrowLeft from '~/icons/arrow-left.svg?raw'
+  import IconPalette from '~/icons/palette.svg?raw'
+
+  import IconGithub from '~/icons/github.svg?raw'
+  import IconMastodon from '~/icons/mastodon.svg?raw'
+  import IconEmail from '~/icons/email.svg?raw'
+  import IconLinkedIn from '~/icons/linkedin.svg?raw'
+  import IconBlueSky from '~/icons/bluesky.svg?raw'
+  import IconTwitter from '~/icons/twitter.svg?raw'
+  import IconRSS from '~/icons/rss.svg?raw'
+
+  class CommandPalette extends HTMLElement {
+    #closeBtn: HTMLButtonElement | null
+    #dialog: HTMLDialogElement | null
+    #dialogFrame: HTMLDivElement | null
+    #openBtn: HTMLButtonElement | null
+    #controller: AbortController
+    #actionsTitle: HTMLH3Element | null
+    #actionsContainer: HTMLDivElement | null
+    #commandPaletteThemes: string[] | null
+    #commandPaletteSocials: any | null
+    #actionsList: CommandPaletteAction[]
+    #actionsPage: string | null
+
+    #actionFunctions = {
+      exampleAction: () => {
+        alert('this is an example action')
+      },
+      changeTheme: ({ theme }) => {
+        document.documentElement.setAttribute('data-theme', theme)
+        localStorage.setItem('data-theme', theme)
+        this.closeModal()
+      },
+    }
+
+    trailingSlashes: boolean
+    stripTrailingSlash: (path: string) => string
+    formatURL: any
+
+    constructor() {
+      super()
+      this.#openBtn = this.querySelector<HTMLButtonElement>('button[data-open-modal]')
+      this.#closeBtn = this.querySelector<HTMLButtonElement>('button[data-close-modal]')
+      this.#dialog = this.querySelector<HTMLDialogElement>('dialog')
+      this.#dialogFrame = this.querySelector('.dialog-frame')
+      this.#controller = new AbortController()
+      this.#actionsTitle = this.querySelector<HTMLH3Element>('h3#actions-title')
+      this.#actionsContainer = this.querySelector<HTMLDivElement>('div#actions-container')
+      this.#commandPaletteThemes = window.commandPaletteThemes
+      this.#commandPaletteSocials = window.commandPaletteSocials
+      this.#actionsList = window.commandPaletteActions
+      this.#actionsPage = null
+
+      this.trailingSlashes = this.dataset.trailingSlashes === 'true' ? true : false
+      this.stripTrailingSlash = (path: string) => path.replace(/(.)\/(#.*)?$/, '$1$2')
+      this.formatURL = !this.trailingSlashes
+        ? this.stripTrailingSlash
+        : (path: string) => path
+
+      // Set up events
+      if (this.#openBtn) {
+        this.#openBtn.addEventListener('click', this.openModal)
+        this.#openBtn.disabled = false
+      } else {
+        console.warn('Search button not found')
+      }
+
+      if (this.#closeBtn) {
+        this.#closeBtn.addEventListener('click', this.closeModal)
+      } else {
+        console.warn('Close button not found')
+      }
+
+      if (this.#dialog) {
+        this.#dialog.addEventListener('close', () => {
+          window.removeEventListener('click', this.onWindowClick)
+        })
+      } else {
+        console.warn('Dialog not found')
+      }
+
+      // Add Theme Actions and Social Links if Necessary
+      if (this.#commandPaletteThemes !== null) this.createThemeActions()
+      if (this.#commandPaletteSocials !== null) this.createSocialLinks()
+
+      // Create actions list
+      this.createActionsList()
+
+      // only add pagefind in production
+      if (!import.meta.env.DEV) {
+        const onIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1))
+        onIdle(async () => {
+          const { PagefindUI } = await import('@pagefind/default-ui')
+
+          new PagefindUI({
+            baseUrl: import.meta.env.BASE_URL,
+            bundlePath: import.meta.env.BASE_URL.replace(/\/$/, '') + '/pagefind/',
+            element: '#pagefind-search-palette',
+            showImages: false,
+            showSubResults: true,
+            processResult: (result: {
+              url: string
+              sub_results: Array<{ url: string }>
+            }) => {
+              // Ensure links in search results match the trailing slashes setting
+              result.url = this.formatURL(result.url)
+
+              result.sub_results = result.sub_results.map((res) => {
+                res.url = this.formatURL(res.url)
+                return res
+              })
+
+              return result
+            },
+          })
+        })
+      }
+    }
+
+    connectedCallback() {
+      // window events, requires cleanup
+      window.addEventListener('keydown', this.onWindowKeydown, {
+        signal: this.#controller.signal,
+      })
+    }
+
+    disconnectedCallback() {
+      this.#controller.abort()
+    }
+
+    openModal = (event?: MouseEvent) => {
+      if (!this.#dialog) {
+        console.warn('Dialog not found')
+        return
+      }
+
+      const body = document.querySelector('body')
+      body?.classList.add('overflow-hidden')
+
+      this.#dialog.showModal()
+      this.querySelector('input')?.focus()
+      event?.stopPropagation()
+      window.addEventListener('click', this.onWindowClick, {
+        signal: this.#controller.signal,
+      })
+    }
+
+    closeModal = () => {
+      const body = document.querySelector('body')
+      body?.classList.remove('overflow-hidden')
+      this.#dialog?.close()
+
+      // Reset the actionslist
+      this.createActionsList()
+    }
+
+    onWindowClick = (event: MouseEvent) => {
+      // check if it's a link
+      const isLink = 'href' in (event.target || {})
+      // make sure the click is either a link or outside of the dialog
+      if (
+        isLink ||
+        (document.body.contains(event.target as Node) &&
+          !this.#dialogFrame?.contains(event.target as Node))
+      ) {
+        this.closeModal()
+      }
+    }
+
+    onWindowKeydown = (e: KeyboardEvent) => {
+      if (!this.#dialog) {
+        console.warn('Dialog not found')
+        return
+      }
+      // check if it's the Control+K or ⌘+K shortcut
+      if ((e.metaKey === true || e.ctrlKey === true) && e.key === 'k') {
+        this.#dialog.open ? this.closeModal() : this.openModal()
+        e.preventDefault()
+      }
+    }
+
+    createSocialLinks() {
+      const socials = this.#commandPaletteSocials
+      const socialActions = []
+
+      for (const key in socials) {
+        if (Object.prototype.hasOwnProperty.call(socials, key)) {
+          let value = socials[key]
+          let icon, name
+
+          switch (key) {
+            case 'github':
+              icon = IconGithub
+              name = 'Go To -> GitHub'
+              break
+            case 'mastodon':
+              icon = IconMastodon
+              name = 'Go To -> Mastodon'
+              break
+            case 'email':
+              icon = IconEmail
+              name = 'Send Me an Email'
+              break
+            case 'linkedin':
+              icon = IconLinkedIn
+              name = 'Go To -> LinkedIn'
+              break
+            case 'bluesky':
+              icon = IconBlueSky
+              name = 'Go To -> BlueSky'
+              break
+            case 'twitter':
+              icon = IconTwitter
+              name = 'Go To -> Twitter'
+              break
+            case 'rss':
+              icon = IconRSS
+              name = 'Go To -> RSS Feed'
+              value = '/rss.xml'
+              break
+            default:
+              break
+          }
+
+          const action = {
+            type: 'link',
+            position: 'front',
+            name,
+            icon,
+            link: value,
+            external: true,
+          }
+
+          socialActions.push(action)
+        }
+      }
+
+      const frontActions = this.#actionsList.filter(
+        (action) => action.position === 'front',
+      )
+      const endActions = this.#actionsList.filter((action) => action.position === 'end')
+
+      this.#actionsList = [...frontActions, ...socialActions, ...endActions]
+    }
+
+    kebabToTitleCase(str: string): string {
+      return str
+        .split('-') // Split the string into words
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+        .join(' ') // Join the words with a space
+    }
+
+    createThemeActions() {
+      const themeChangeActions = this.#commandPaletteThemes.map((theme) => ({
+        type: 'action',
+        name: this.kebabToTitleCase(theme),
+        fn: 'changeTheme',
+        params: { theme },
+      }))
+
+      const themeSelectAction = {
+        type: 'page',
+        position: 'end',
+        name: 'Select Theme',
+        icon: IconPalette,
+        actions: themeChangeActions,
+      }
+
+      const frontActions = this.#actionsList.filter(
+        (action) => action.position === 'front',
+      )
+      const endActions = this.#actionsList.filter((action) => action.position === 'end')
+
+      this.#actionsList = [...frontActions, themeSelectAction, ...endActions]
+    }
+
+    createActionsList(page?: string | null) {
+      // Set the Actions Page
+      this.#actionsPage = page
+
+      // Reset the List
+      this.#actionsContainer.innerHTML = ''
+
+      // Update the Title
+      page
+        ? (this.#actionsTitle.innerText = `Quick Actions : ${page}`)
+        : (this.#actionsTitle.innerText = 'Quick Actions')
+
+      // Get the List of Actions (root or page)
+      let actionList
+
+      if (page) {
+        const [pageObj] = this.#actionsList.filter(
+          (action) => action.type === 'page' && action.name === page,
+        )
+
+        if (pageObj) {
+          actionList = pageObj.actions
+        }
+      } else {
+        actionList = this.#actionsList
+      }
+
+      // Create the Actions List Elements
+      if (page) {
+        // Add back button as the first action for pages
+        const backButton = document.createElement('button')
+        backButton.className =
+          'action-item flex gap-3 p-3 rounded-lg border border-accent/20 hover:bg-accent/10 hover:border-accent/40 transition-colors text-left'
+        backButton.dataset.actionType = 'back'
+        backButton.dataset.actionName = 'back'
+
+        const backIcon = document.createElement('svg')
+        backIcon.className = 'text-sm text-accent size-5'
+        backIcon.innerHTML = IconArrowLeft
+
+        const backText = document.createElement('span')
+        backText.className = 'action-name font-medium'
+        backText.innerText = 'Back to Actions'
+
+        backButton.appendChild(backIcon)
+        backButton.appendChild(backText)
+
+        this.#actionsContainer.appendChild(backButton)
+      }
+
+      for (let i = 0; i < actionList.length; i++) {
+        const action = actionList[i]
+
+        let actionElement
+        action.type === 'link'
+          ? (actionElement = document.createElement('a'))
+          : (actionElement = document.createElement('button'))
+        actionElement.className =
+          'action-item flex gap-3 p-3 rounded-lg border border-accent/20 hover:bg-accent/10 hover:border-accent/40 transition-colors text-left'
+        actionElement.dataset.actionType = action.type
+        actionElement.dataset.actionName = action.name
+
+        if (action.type === 'link') {
+          actionElement.href = action.link
+        }
+
+        if (action.icon) {
+          const actionIcon = document.createElement('svg')
+          actionIcon.className = 'text-sm text-accent size-5'
+          actionIcon.innerHTML = action.icon
+
+          actionElement.appendChild(actionIcon)
+        }
+
+        const actionText = document.createElement('span')
+        actionText.className = 'action-name font-medium'
+        actionText.innerText = action.name
+        actionElement.appendChild(actionText)
+
+        if (action.type === 'link' && action.external) {
+          actionElement.target = '_blank'
+
+          const actionIcon = document.createElement('svg')
+          actionIcon.className = 'ml-auto text-sm text-accent size-5'
+          actionIcon.innerHTML = IconExternalLink
+
+          actionElement.appendChild(actionIcon)
+        }
+
+        if (action.type === 'page') {
+          const actionIcon = document.createElement('svg')
+          actionIcon.className = 'ml-auto text-sm text-accent size-5'
+          actionIcon.innerHTML = IconArrowRight
+
+          actionElement.appendChild(actionIcon)
+        }
+
+        this.#actionsContainer.appendChild(actionElement)
+      }
+
+      // Set up action button events
+      this.setupActionButtons()
+    }
+
+    setupActionButtons() {
+      const actionButtons = this.querySelectorAll<HTMLButtonElement>('.action-item')
+      actionButtons.forEach((button) => {
+        button.addEventListener('click', this.handleActionClick)
+      })
+    }
+
+    handleActionClick = (event: Event) => {
+      const button = event.currentTarget as HTMLButtonElement
+      const actionType = button.getAttribute('data-action-type')
+      const actionName = button.getAttribute('data-action-name')
+
+      switch (actionType) {
+        case 'link':
+          // Links will handle navigation automatically
+          break
+        case 'action':
+          if (this.#actionsPage) {
+            const [pageObj] = this.#actionsList.filter(
+              (action) => action.type === 'page' && action.name === this.#actionsPage,
+            )
+            const [actionObj] = pageObj.actions.filter(
+              (action) => action.type === actionType && action.name === actionName,
+            )
+            this.#actionFunctions[actionObj.fn](actionObj.params)
+          } else {
+            const [actionObj] = this.#actionsList.filter(
+              (action) => action.type === actionType && action.name === actionName,
+            )
+            this.#actionFunctions[actionObj.fn](actionObj.params)
+          }
+          break
+        case 'page':
+          // For page type, navigate to the sub-page
+          this.createActionsList(actionName)
+          break
+        case 'back':
+          // For back type, return to the root actions list
+          this.createActionsList()
+          break
+      }
+
+      // Only close modal for non-page actions
+      if (actionType !== 'page' && actionType !== 'back') {
+        this.closeModal()
+      }
+    }
+  }
+
+  customElements.define('command-palette', CommandPalette)
+</script>

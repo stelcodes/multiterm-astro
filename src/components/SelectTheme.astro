@@ -110,13 +110,6 @@ function kebabToTitleCase(str: string): string {
       })
     }
 
-    connectedCallback() {
-      // window events, requires cleanup
-      window.addEventListener('keydown', this.onWindowKeydown, {
-        signal: this.#controller.signal,
-      })
-    }
-
     disconnectedCallback() {
       this.#controller.abort()
     }
@@ -152,18 +145,6 @@ function kebabToTitleCase(str: string): string {
           !this.#dialogFrame?.contains(event.target as Node))
       ) {
         this.closeModal()
-      }
-    }
-
-    onWindowKeydown = (e: KeyboardEvent) => {
-      if (!this.#dialog) {
-        console.warn('Dialog not found')
-        return
-      }
-      // check if it's the Control+K or ⌘+K shortcut
-      if ((e.metaKey === true || e.ctrlKey === true) && e.key === 'k') {
-        this.#dialog.open ? this.closeModal() : this.openModal()
-        e.preventDefault()
       }
     }
 
