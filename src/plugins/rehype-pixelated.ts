@@ -8,8 +8,8 @@ const plugin: Plugin<[], Root> = () => {
       if (el.tagName === 'img') {
         const alt = el.properties?.alt
         if (alt && typeof alt === 'string' && alt.endsWith('#pixelated')) {
-          el.properties['pixelated'] = 'true'
-          el.properties.alt = alt.replace(/#pixelated/g, '').trim()
+          el.properties['data-pixelated'] = true
+          el.properties.alt = alt.substring(0, alt.length - '#pixelated'.length).trim()
         }
       }
     })

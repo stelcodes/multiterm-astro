@@ -53,7 +53,7 @@ npm run dev
 **Build Your Site and View the Results**:
 
 ```bash
-npm run build && npx serve dist
+npm run build && npm run preview
 ```
 
 ## 🛠️ Configuration

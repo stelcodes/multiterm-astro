@@ -11,12 +11,12 @@ const {
 ---
 
 <li class="flex items-stretch border-foreground/20">
-  <div class="flex">
+  <div class="flex items-stretch">
     {
       Array.from({ length: depth - 1 }, (_v, _k) => (
-        <div class="toc-lines flex flex-col items-center">
-          <span class="top-box w-4 xl:w-3 basis-4 border-b-1 border-foreground/20" />
-          <span class="bottom-box w-4 xl:w-3 flex-1 border-t-1 border-foreground/20" />
+        <div class="toc-lines flex flex-col items-stretch">
+          <span class="top-box w-4 xl:w-3 basis-4 border-b-1 border-foreground/20 xl:border-foreground/15" />
+          <span class="bottom-box w-4 min-h-1/2 xl:w-3 flex-1 border-t-1 border-foreground/20 xl:border-foreground/15" />
         </div>
       ))
     }

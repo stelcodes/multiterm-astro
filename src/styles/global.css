@@ -39,6 +39,7 @@
   --color-magenta: var(--theme-magenta);
   --color-cyan: var(--theme-cyan);
   --default-font-family: var(--theme-font), monospace;
+  --default-mono-font-family: var(--theme-font), monospace;
 }
 
 header {
@@ -66,7 +67,7 @@ html {
 body {
   @apply transition-colors;
   font-display: block;
-  font-size-adjust: ex-height 0.53;
+  font-size-adjust: from-font var(--theme-font);
 }
 
 /* hide katex-html */
@@ -91,6 +92,10 @@ button {
   @apply hover:cursor-pointer;
 }
 
+a {
+  @apply underline-offset-2;
+}
+
 a.button {
   @apply inline-flex text-accent border-3 border-accent/30 border-double py-1.5 px-3 whitespace-nowrap hover:bg-accent/8 rounded-xl transition-colors;
 }
@@ -107,7 +112,7 @@ button {
 article img {
   @apply block max-w-full border-8 border-foreground/10 rounded-xl overflow-hidden mx-auto;
 
-  &[pixelated='true'] {
+  &[data-pixelated] {
     image-rendering: pixelated;
   }
 }
@@ -116,7 +121,7 @@ article img {
   @apply text-base/7;
 
   code:not(.expressive-code code) {
-    @apply text-sm font-mono text-foreground/90 bg-foreground/5 px-2.5 py-1 rounded-lg whitespace-nowrap;
+    @apply text-sm text-foreground/90 bg-foreground/5 px-2 py-1 rounded-lg whitespace-nowrap;
   }
 
   & > *:not(div.expressive-code, img, figure, video, hr, blockquote, aside),
@@ -127,20 +132,30 @@ article img {
   div.expressive-code {
     @apply my-8;
 
+    --ec-codeFontFml: var(--default-mono-font-family);
+
     /* Prevent italics in code blocks */
     /* Feel free to remove this if you want italics */
     div.code span {
       font-style: normal !important;
     }
 
-    div.copy button {
-      @apply hidden sm:flex;
-      --code-background: var(--theme-background);
+    div.copy {
+      --button-spacing: 9px;
+
+      button {
+        @apply hidden sm:flex;
+        --code-background: var(--theme-background);
+      }
     }
 
     figure {
       @apply border-2 border-foreground/8 !rounded-xl;
       box-shadow: none !important;
+
+      &.has-title div.copy, &.is-terminal div.copy {
+        --button-spacing: 28px;
+      }
 
       &.has-title.is-terminal {
         span.title {
@@ -198,22 +213,10 @@ article img {
   h4,
   h5,
   h6 {
-    @apply flex items-center my-6.5 font-semibold;
+    @apply my-6.5 font-semibold;
 
-    span[role='img'] {
-      @apply mx-2.5;
-    }
-
-    .heading-anchor {
-      @apply opacity-0 inline-block text-accent/10 ml-3 transition-opacity;
-    }
-
-    &::before {
-      @apply self-start;
-    }
-
-    &:hover .heading-anchor {
-      @apply !opacity-80;
+    a {
+      @apply underline-offset-3 text-inherit no-underline;
     }
   }
 
@@ -344,7 +347,7 @@ article img {
   }
 
   ul li {
-    list-style-type: "-";
+    list-style-type: '-';
   }
 
   ol li {
