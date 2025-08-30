@@ -3,7 +3,7 @@ title: 'Advanced TypeScript: Conditional Types'
 published: 2025-07-10
 draft: false
 description: 'Dive into conditional types in TypeScript and how they can enhance type safety.'
-tags: ['typescript']
+tags: ['typescript', '演示', 'theory><:', 'theory']
 ---
 
 ```shell

@@ -5,7 +5,10 @@ interface Props {
 
 const { title } = Astro.props
 
-const splitPath: string[] = Astro.url.pathname.split('/').filter(Boolean) // Remove empty parts
+const splitPath: string[] = Astro.url.pathname
+  .split('/')
+  .filter(Boolean) // Remove empty parts
+  .map((part) => decodeURIComponent(part)) // For Unicode chars kept by github-slugger
 
 if (splitPath.length === 0) {
   splitPath.push('home')
