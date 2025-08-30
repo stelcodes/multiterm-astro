@@ -14,7 +14,7 @@ export const getStaticPaths = (async ({ paginate }) => {
     // Use flatMap to lift the posts for each tag into a single array
     return paginate(tags.entries.reverse(), {
       props: { tagTitle: tags.title },
-      params: { tag: tags.key },
+      params: { tag: tags.titleSlug },
       pageSize: siteConfig.pageSize,
     })
   })

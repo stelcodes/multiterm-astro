@@ -9,7 +9,7 @@ export const getStaticPaths = (async () => {
   const seriesGroup = await SeriesGroup.build()
   return seriesGroup.collations.map((series) => {
     return {
-      params: { slug: series.key },
+      params: { slug: series.titleSlug },
       props: { posts: series.entries, seriesTitle: series.title },
     }
   })

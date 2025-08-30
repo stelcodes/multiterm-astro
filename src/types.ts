@@ -48,7 +48,7 @@ export interface FrontmatterImage {
 export interface Collation<CollectionType extends keyof DataEntryMap> {
   title: string
   url: string
-  key: string
+  titleSlug: string
   entries: CollectionEntry<CollectionType>[]
 }
 

@@ -254,9 +254,9 @@ abstract class PostsCollationGroup implements CollationGroup<'posts'> {
     return this.collations
   }
 
-  add(item: CollectionEntry<'posts'>, rawKey: string): void {
-    const key = slug(rawKey.trim())
-    const existing = this.collations.find((i) => i.key === key)
+  add(item: CollectionEntry<'posts'>, collationTitle: string): void {
+    const collationTitleSlug = slug(collationTitle.trim())
+    const existing = this.collations.find((i) => i.titleSlug === collationTitleSlug)
     if (existing) {
       const alreadyHasThisPost = existing.entries.find((e) => e.id === item.id)
       if (!alreadyHasThisPost) {
@@ -264,9 +264,9 @@ abstract class PostsCollationGroup implements CollationGroup<'posts'> {
       }
     } else {
       this.collations.push({
-        title: rawKey,
-        key,
-        url: `${this.url}/${encodeURIComponent(key)}`,
+        title: collationTitle,
+        titleSlug: collationTitleSlug,
+        url: `${this.url}/${encodeURIComponent(collationTitleSlug)}`,
         entries: [item],
       })
     }
