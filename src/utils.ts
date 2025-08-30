@@ -14,7 +14,7 @@ import {
 } from 'astro-expressive-code'
 import { getCollection, type CollectionEntry } from 'astro:content'
 import Color from 'color'
-import GithubSlugger from 'github-slugger'
+import { slug } from 'github-slugger'
 
 export function dateString(date: Date) {
   return date.toISOString().split('T')[0]
@@ -228,13 +228,11 @@ abstract class PostsCollationGroup implements CollationGroup<'posts'> {
   title: string
   url: string
   collations: Collation<'posts'>[]
-  slugger: GithubSlugger
 
   constructor(title: string, url: string, collations: Collation<'posts'>[]) {
     this.title = title
     this.url = url
     this.collations = collations
-    this.slugger = new GithubSlugger()
   }
 
   sortCollationsAlpha(): Collation<'posts'>[] {
@@ -257,11 +255,14 @@ abstract class PostsCollationGroup implements CollationGroup<'posts'> {
   }
 
   add(item: CollectionEntry<'posts'>, rawKey: string): void {
-    const existing = this.collations.find((i) => i.title === rawKey)
+    const key = slug(rawKey.trim())
+    const existing = this.collations.find((i) => i.key === key)
     if (existing) {
-      existing.entries.push(item)
+      const alreadyHasThisPost = existing.entries.find((e) => e.id === item.id)
+      if (!alreadyHasThisPost) {
+        existing.entries.push(item)
+      }
     } else {
-      const key = this.slugger.slug(rawKey)
       this.collations.push({
         title: rawKey,
         key,

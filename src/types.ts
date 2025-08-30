@@ -1,7 +1,6 @@
 import type { MarkdownHeading } from 'astro'
 import type { BundledShikiTheme } from 'astro-expressive-code'
 import type { CollectionEntry, DataEntryMap } from 'astro:content'
-import type GithubSlugger from 'github-slugger'
 
 export type WeekdayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 // 0 = Sunday, 1 = Monday etc.
 
@@ -56,7 +55,6 @@ export interface Collation<CollectionType extends keyof DataEntryMap> {
 export interface CollationGroup<CollectionType extends keyof DataEntryMap> {
   title: string
   url: string
-  slugger: GithubSlugger // Stateful slugger to generate unique slugs
   collations: Collation<CollectionType>[]
   // Return this.collations to allow chaining
   sortCollationsAlpha(): Collation<CollectionType>[]
