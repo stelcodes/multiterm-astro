@@ -10,17 +10,20 @@ export const getStaticPaths = (async () => {
   return seriesGroup.collations.map((series) => {
     return {
       params: { slug: series.key },
-      props: { posts: series.entries, title: series.title },
+      props: { posts: series.entries, seriesTitle: series.title },
     }
   })
 }) satisfies GetStaticPaths
 
-const { posts, title } = Astro.props
+const { posts, seriesTitle } = Astro.props
 ---
 
-<Layout title={`Series: ${title}`} description={`All posts in the ${title} series`}>
+<Layout
+  title={`Series: ${seriesTitle}`}
+  description={`All posts in the ${seriesTitle} series`}
+>
   <div class="mt-2 sm:mt-0">
-    <PageHeader />
+    <PageHeader titlePieces={['series', seriesTitle]} />
     {posts.map((post) => <PostPreview post={post} />)}
   </div>
 </Layout>

@@ -13,6 +13,7 @@ export const getStaticPaths = (async ({ paginate }) => {
   const pages = tagsGroup.collations.flatMap((tags) => {
     // Use flatMap to lift the posts for each tag into a single array
     return paginate(tags.entries.reverse(), {
+      props: { tagTitle: tags.title },
       params: { tag: tags.key },
       pageSize: siteConfig.pageSize,
     })
@@ -20,15 +21,14 @@ export const getStaticPaths = (async ({ paginate }) => {
   return pages
 }) satisfies GetStaticPaths
 
-const { page } = Astro.props
-const { tag } = Astro.params
+const { page, tagTitle } = Astro.props
 const pageTitle =
-  `Tag: ${tag}` + (page.currentPage > 1 ? ` - Page ${page.currentPage}` : '')
+  `Tag: ${tagTitle}` + (page.currentPage > 1 ? ` - Page ${page.currentPage}` : '')
 ---
 
-<Layout title={pageTitle} description={`All posts tagged with ${tag}`}>
+<Layout title={pageTitle} description={`All posts tagged with ${tagTitle}`}>
   <div class="mt-2 sm:mt-0">
-    <PageHeader />
+    <PageHeader titlePieces={['tags', tagTitle]} />
     {page.data.map((post) => <PostPreview post={post} />)}
     <Pagination
       prevLink={page.url.prev ? encodeURI(page.url.prev) : undefined}
