@@ -3,8 +3,10 @@ import siteConfig from '~/site.config'
 import LightDarkAutoButton from '~/components/LightDarkAutoButton.astro'
 import Search from '~/components/Search.astro'
 import SelectTheme from '~/components/SelectTheme.astro'
+import CommandPalette from '~/components/CommandPalette.astro'
 import NavLink from '~/components/NavLink.astro'
 
+const useCommandPalette = siteConfig.commandPalette.enabled
 const lightDarkAutoTheme = siteConfig.themes.mode === 'light-dark-auto'
 const selectTheme =
   siteConfig.themes.mode === 'select' && siteConfig.themes.include.length > 1
@@ -23,6 +25,20 @@ const selectTheme =
       <Search trailingSlashes={siteConfig.trailingSlashes} />
       {lightDarkAutoTheme && <LightDarkAutoButton />}
       {selectTheme && <SelectTheme />}
+      {
+        useCommandPalette && (
+          <CommandPalette
+            socialLinks={
+              siteConfig.commandPalette.useSocialLinks ? siteConfig.socialLinks : null
+            }
+            themes={
+              siteConfig.commandPalette.useThemes ? siteConfig.themes.include : null
+            }
+            actions={siteConfig.commandPalette.customActions}
+            trailingSlashes={siteConfig.trailingSlashes}
+          />
+        )
+      }
       <nav id="nav-mobile" aria-label="Menu" class="p-0 text-accent sm:hidden">
         <button
           id="nav-mobile-button"
