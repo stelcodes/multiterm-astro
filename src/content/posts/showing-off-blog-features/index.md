@@ -206,6 +206,42 @@ Make those equations pretty! $ \frac{a}{b} \cdot b = a $
 
 Make those equations pretty! $ \frac{a}{b} \cdot b = a $
 
+You can use double dollar-sign to show a display-style formula.
+
+```
+Let's look at Einstein's great formula:
+$$
+E=mc^2
+$$
+```
+
+Let's look at Einstein's great formula:
+$$
+E=mc^2
+$$
+
+You can also number the formula.
+
+```
+The Pythagoras theorem is
+$$
+c^2=a^2+b^2\tag{1}
+$$
+It is very similar to Einstein's great formula
+$$
+E^2=m^2c^4+c^2p^2\tag{2}
+$$
+```
+
+The Pythagoras theorem is
+$$
+c^2=a^2+b^2\tag{1}
+$$
+It is very similar to Einstein's great formula
+$$
+E^2=m^2c^4+c^2p^2\tag{2}
+$$
+
 ## HTML Elements
 
 <button>A Button</button>
