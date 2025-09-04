@@ -153,7 +153,8 @@ article img {
       @apply border-2 border-foreground/8 !rounded-xl;
       box-shadow: none !important;
 
-      &.has-title div.copy, &.is-terminal div.copy {
+      &.has-title div.copy,
+      &.is-terminal div.copy {
         --button-spacing: 28px;
       }
 
@@ -384,10 +385,14 @@ article img {
     @apply bg-foreground/7;
 
     &.character-dialogue {
-      @apply sm:bg-transparent flex sm:items-start items-center justify-center gap-3 sm:flex-row px-2 md:px-5;
+      @apply sm:bg-transparent flex items-center sm:items-start justify-center sm:justify-start gap-3 py-4 px-2 md:px-5;
+
+      &:has(+ aside.character-dialogue) {
+        @apply mb-4 sm:mb-0 sm:pb-0;
+      }
 
       & + aside.character-dialogue {
-        @apply sm:pt-1 -mt-2 sm:-mt-7;
+        @apply mt-4 sm:mt-3 sm:pt-0;
 
         &:nth-of-type(even) {
           @apply flex-row-reverse;
@@ -404,7 +409,7 @@ article img {
       }
 
       .character-dialogue-content {
-        @apply relative shrink-5 sm:bg-foreground/6 px-1 mx-1.5 sm:px-6 rounded-xl sm:py-6 max-w-full sm:min-w-1/8;
+        @apply relative shrink-5 sm:bg-foreground/6 px-1 mx-1.5 sm:px-6 sm:mt-1 rounded-xl sm:py-6 max-w-full sm:min-w-1/8;
 
         /* Add pointy part of speech bubble to the bottom left corner */
         &:after {
