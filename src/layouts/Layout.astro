@@ -1,5 +1,6 @@
 ---
 import '~/styles/global.css'
+import 'katex/dist/katex.min.css'
 import Header from '~/components/Header.astro'
 import Footer from '~/components/Footer.astro'
 import LightDarkAutoThemeLoader from '~/components/LightDarkAutoThemeLoader.astro'
@@ -153,6 +154,13 @@ let generatedCss: string = cssLines.join('\n')
     <style is:inline set:html={generatedCss}></style>
     {themeMode === 'light-dark-auto' && <LightDarkAutoThemeLoader />}
     {themeMode === 'select' && <SelectThemeLoader />}
+    <style is:inline>
+      .katex-html[aria-hidden='true'] {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    </style>
   </head>
   <body class="w-full h-full m-0 bg-background text-foreground">
     <div
