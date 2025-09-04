@@ -162,6 +162,18 @@ This is a cool feature!
 I agree!
 :::
 
+You can also manually specify the alignment (`left` or `right`) for any character chat manually:
+
+```md wrap title="Character chats with specific alignment"
+:::unicorn{align="right"}
+Over here, to the right!
+:::
+```
+
+:::unicorn{align="right"}
+Over here, to the right!
+:::
+
 ## GitHub Cards
 
 GitHub overview cards heavily inspired by [Astro Cactus](https://github.com/chrismwilliams/astro-theme-cactus).

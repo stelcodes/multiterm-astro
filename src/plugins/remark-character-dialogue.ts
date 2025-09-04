@@ -33,36 +33,21 @@ const remarkCharacterDialogue: Plugin<[{ characters: Record<string, string> }], 
       const characterName = node.name
       if (!isCharacterDialogue(characterName)) return
 
-      let title: string = characterName
-      let titleNode: PhrasingContent[] = [{ type: 'text', value: title }]
-
-      // Check if there's a custom title
-      const firstChild = node.children[0]
-      if (
-        firstChild?.type === 'paragraph' &&
-        firstChild.data &&
-        'directiveLabel' in firstChild.data &&
-        firstChild.children.length > 0
-      ) {
-        titleNode = firstChild.children
-        title = mdastToString(firstChild.children)
-        // The first paragraph contains a custom title, we can safely remove it.
-        node.children.splice(0, 1)
-      }
+      const align = node.attributes?.align ?? null
+      const alignClass = align === 'left' || align === 'right' ? ` align-${align}` : ''
 
       // Do not change prefix to AD, ADM, or similar, adblocks will block the content inside.
       const admonition = h(
         'aside',
         {
-          'aria-label': `Character dialogue: ${title}`,
-          class: 'character-dialogue',
+          'aria-label': `Character dialogue: ${characterName}`,
+          class: 'character-dialogue' + alignClass,
           'data-character': characterName,
         },
         [
-          // h('p', { class: 'admonition-title', 'aria-hidden': 'true' }, [...titleNode]),
           h('img', {
             class: 'character-dialogue-image',
-            alt: title,
+            alt: characterName,
             loading: 'lazy',
             src: opts.characters[characterName],
             width: 100,

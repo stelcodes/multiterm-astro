@@ -391,17 +391,18 @@ article img {
         @apply mb-4 sm:mb-0 sm:pb-0;
       }
 
+      & + aside.character-dialogue:nth-of-type(even):not(.align-left),
+      &.align-right {
+        @apply flex-row-reverse;
+
+        .character-dialogue-content:after {
+          @apply -right-3 -rotate-90;
+          left: initial;
+        }
+      }
+
       & + aside.character-dialogue {
         @apply mt-4 sm:mt-3 sm:pt-0;
-
-        &:nth-of-type(even) {
-          @apply flex-row-reverse;
-
-          .character-dialogue-content:after {
-            @apply -right-3 -rotate-90;
-            left: initial;
-          }
-        }
       }
 
       img.character-dialogue-image {
@@ -409,7 +410,7 @@ article img {
       }
 
       .character-dialogue-content {
-        @apply relative shrink-5 sm:bg-foreground/6 px-1 mx-1.5 sm:px-6 sm:mt-1 rounded-xl sm:py-6 max-w-full sm:min-w-1/8;
+        @apply relative shrink-5 sm:bg-foreground/6 px-1 mx-1.5 sm:px-6 sm:mt-0.5 rounded-xl sm:py-6 max-w-full sm:min-w-1/8;
 
         /* Add pointy part of speech bubble to the bottom left corner */
         &:after {
