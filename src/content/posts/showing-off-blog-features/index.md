@@ -212,11 +212,23 @@ Good morning! :sleeping: :coffee: :pancakes:
 
 You can also display inline math via [remark-math and rehype-katex](https://github.com/remarkjs/remark-math).
 
-```txt title="Rendering pretty math with KaTeX"
+```txt title="Rendering inline math with KaTeX"
 Make those equations pretty! $ \frac{a}{b} \cdot b = a $
 ```
 
 Make those equations pretty! $ \frac{a}{b} \cdot b = a $
+
+Check out the [KaTeX docs](https://katex.org/docs/supported) to learn about the syntax.
+
+```md title="Rendering a block of KaTeX" wrap
+$$
+a + ar + ar^2 + ar^3 + \dots + ar^{n-1} = \displaystyle\sum_{k=0}^{n - 1}ar^k = a \bigg(\dfrac{1 - r^n}{1 -r}\bigg)
+$$
+```
+
+$$
+a + ar + ar^2 + ar^3 + \dots + ar^{n-1} = \displaystyle\sum_{k=0}^{n - 1}ar^k = a \bigg(\dfrac{1 - r^n}{1 -r}\bigg)
+$$
 
 ## HTML Elements
 

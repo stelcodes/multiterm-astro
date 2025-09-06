@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'katex/dist/katex.css';
 
 /* https://fontsource.org/fonts/jetbrains-mono/install */
 /* jetbrains-mono-latin-wght-normal */
@@ -68,11 +69,6 @@ body {
   @apply transition-colors;
   font-display: block;
   font-size-adjust: from-font var(--theme-font);
-}
-
-/* hide katex-html */
-.katex-html {
-  @apply hidden;
 }
 
 input:focus-visible,
@@ -570,6 +566,10 @@ article img {
 
   th {
     @apply uppercase text-left;
+  }
+
+  .katex-display {
+    @apply overflow-x-auto;
   }
 
   fieldset {
