@@ -1,5 +1,4 @@
-import type { PhrasingContent, Root } from 'mdast'
-import { toString as mdastToString } from 'mdast-util-to-string'
+import type { Root } from 'mdast'
 import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
 import { h as _h, type Properties } from 'hastscript'
