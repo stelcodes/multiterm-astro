@@ -569,7 +569,7 @@ article img {
   }
 
   .katex-display {
-    @apply overflow-x-auto;
+    @apply overflow-x-auto py-2 my-2;
   }
 
   fieldset {
