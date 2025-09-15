@@ -88,6 +88,8 @@ const { trailingSlashes = false } = Astro.props
     #openBtn: HTMLButtonElement | null
     #controller: AbortController
     trailingSlashes: boolean
+    stripTrailingSlash: (path: string) => string
+    formatURL: (path: string) => string
 
     constructor() {
       super()
@@ -120,6 +122,8 @@ const { trailingSlashes = false } = Astro.props
       if (this.#dialog) {
         this.#dialog.addEventListener('close', () => {
           window.removeEventListener('click', this.onWindowClick)
+          const body = document.querySelector('body')
+          body?.classList.remove('overflow-hidden')
         })
       } else {
         console.warn('Dialog not found')
@@ -184,8 +188,6 @@ const { trailingSlashes = false } = Astro.props
     }
 
     closeModal = () => {
-      const body = document.querySelector('body')
-      body?.classList.remove('overflow-hidden')
       this.#dialog?.close()
     }
 

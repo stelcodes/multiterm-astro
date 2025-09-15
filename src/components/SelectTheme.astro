@@ -91,6 +91,8 @@ function kebabToTitleCase(str: string): string {
       if (this.#dialog) {
         this.#dialog.addEventListener('close', () => {
           window.removeEventListener('click', this.onWindowClick)
+          const body = document.querySelector('body')
+          body?.classList.remove('overflow-hidden')
         })
       } else {
         console.warn('Dialog not found')
@@ -137,8 +139,6 @@ function kebabToTitleCase(str: string): string {
     }
 
     closeModal = () => {
-      const body = document.querySelector('body')
-      body?.classList.remove('overflow-hidden')
       this.#dialog?.close()
     }
 
